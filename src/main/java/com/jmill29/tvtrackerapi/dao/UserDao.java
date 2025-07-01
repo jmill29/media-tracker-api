@@ -7,12 +7,71 @@ import java.util.Optional;
 import com.jmill29.tvtrackerapi.dto.UserDto;
 import com.jmill29.tvtrackerapi.model.User;
 
+/**
+ * Data Access Object interface for managing User data in the database.
+ */
 public interface UserDao {
 
-    public Optional<UserDto> findById(int id) throws SQLException;
-    public Optional<UserDto> findByUsername(String username) throws SQLException;
-    public List<UserDto> findAll() throws SQLException;
-    public boolean save(User user) throws SQLException;
-    public boolean deleteById(int id) throws SQLException;
+    /**
+     * Finds a user by their unique ID.
+     * <p>
+     * Searches the database for a user with the specified ID and returns the corresponding {@link UserDto}
+     * wrapped in an {@link Optional}, or an empty {@code Optional} if no user is found.
+     * </p>
+     *
+     * @param id the ID of the user to find
+     * @return an {@code Optional<UserDto>} if the user exists, or {@code Optional.empty()} otherwise
+     * @throws SQLException if a database access error occurs
+     */
+    Optional<UserDto> findById(int id) throws SQLException;
+
+    /**
+     * Finds a user by their username.
+     * <p>
+     * Searches the database for a user with the given username. This is typically used during authentication.
+     * </p>
+     *
+     * @param username the username to search for
+     * @return an {@code Optional<UserDto>} if the user exists, or {@code Optional.empty()} otherwise
+     * @throws SQLException if a database access error occurs
+     */
+    Optional<UserDto> findByUsername(String username) throws SQLException;
+
+    /**
+     * Retrieves all users from the database.
+     * <p>
+     * Returns a list of all users as {@link UserDto} objects, excluding sensitive fields like passwords.
+     * </p>
+     *
+     * @return a {@code List<UserDto>} of all users in the system
+     * @throws SQLException if a database access error occurs
+     */
+    List<UserDto> findAll() throws SQLException;
+
+    /**
+     * Saves a user to the database.
+     * <p>
+     * If the {@code userId} of the given {@link User} object is 0, a new user is inserted.
+     * Otherwise, the existing user is updated based on their ID.
+     * </p>
+     *
+     * @param user the {@link User} object to insert or update
+     * @return {@code true} if the operation was successful, {@code false} otherwise
+     * @throws SQLException if a database access error occurs
+     */
+    boolean save(User user) throws SQLException;
+
+    /**
+     * Deletes a user by their unique ID.
+     * <p>
+     * Removes the user record with the given ID from the database.
+     * </p>
+     *
+     * @param id the ID of the user to delete
+     * @return {@code true} if the user was deleted successfully, {@code false} otherwise
+     * @throws SQLException if a database access error occurs
+     */
+    boolean deleteById(int id) throws SQLException;
 
 }
+
