@@ -4,6 +4,7 @@ USE tv_show_tracker;
 -- Drop tables if they already exist (for reset convenience)
 DROP TABLE IF EXISTS user_watch_history;
 DROP TABLE IF EXISTS show_genres;
+DROP TABLE IF EXISTS authorities;
 DROP TABLE IF EXISTS genres;
 DROP TABLE IF EXISTS tv_shows;
 DROP TABLE IF EXISTS users;
@@ -13,9 +14,16 @@ CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     username VARCHAR(100) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
+    password VARCHAR(255) NOT NULL,
     email VARCHAR(320) NOT NULL UNIQUE,
+    enabled BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE authorities (
+    username VARCHAR(100),
+    authority VARCHAR(50),
+    FOREIGN KEY (username) REFERENCES users(username)
 );
 
 -- TV Shows Table
@@ -124,3 +132,11 @@ INSERT INTO show_genres (show_id, genre_id) VALUES
 (9, 7), (9, 9),
 (10, 1), (10, 2), (10, 7), (10, 8), (10, 9),
 (11, 1);
+
+-- Seed users Table with 1 user (default user)
+INSERT INTO users (name, username, password, email)
+VALUES ('default', 'user', 'test123', 'default@email.com');
+
+-- Seed authorities table - assign default user a role
+INSERT INTO authorities (username, authority)
+VALUES ('user', 'ROLE_USER');
