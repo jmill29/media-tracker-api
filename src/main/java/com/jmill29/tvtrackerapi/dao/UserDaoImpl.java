@@ -81,7 +81,9 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public boolean save(User user) throws SQLException {
+        // If userId is 0, treat as a new user (insert)
         if (user.getUserId() == 0) {
+            // Prevent duplicate usernames
             if (findByUsername(user.getUsername()).isPresent()) {
                 throw new UserAlreadyExistsException("User with Username " + user.getUsername() + " already exists");
             }
@@ -90,6 +92,7 @@ public class UserDaoImpl implements UserDao {
                 return createUser(user, conn);
             }
         } else {
+            // If updating, ensure the user exists first
             if (findById(user.getUserId()).isEmpty()) {
                 throw new UserNotFoundException("User with ID " + user.getUserId() + " not found");
             }
@@ -115,8 +118,10 @@ public class UserDaoImpl implements UserDao {
     }
 
     private boolean updateUser(User user, Connection conn) throws SQLException {
+        // Only update password if a new one is provided (not null/blank)
         boolean updatingPassword = user.getPassword() != null && !user.getPassword().isBlank();
 
+        // Build query dynamically depending on whether password is being updated
         String query = "UPDATE users SET name = ?, username = ?, ";
 
         if (updatingPassword) {
@@ -132,6 +137,7 @@ public class UserDaoImpl implements UserDao {
         
         int i = 3;
         if (updatingPassword) {
+            // Password is encoded before storing
             pStmt.setString(i++, encoder.encode(user.getPassword()));
         }
 
@@ -144,6 +150,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     private boolean createUser(User user, Connection conn) throws SQLException {
+        // Always encode password before storing
         String query = "INSERT INTO users (name, username, password, email) VALUES (?, ?, ?, ?)";
         PreparedStatement pStmt = conn.prepareStatement(query);
 
@@ -158,13 +165,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     private UserDto mapUser(ResultSet rs) throws SQLException {
+        // Maps a ResultSet row to a UserDto. Order matches UserDto constructor: userId, name, username, email, createdAt
         return new UserDto(
-            rs.getString("email"),
-            rs.getString("name"),
             rs.getInt("user_id"),
+            rs.getString("name"),
             rs.getString("username"),
+            rs.getString("email"),
             rs.getTimestamp("created_at").toLocalDateTime()
-            );
+        );
     }
 
 }
