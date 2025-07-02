@@ -10,14 +10,19 @@ import java.util.Optional;
 
 import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import com.jmill29.tvtrackerapi.exception.ShowAlreadyExistsException;
 import com.jmill29.tvtrackerapi.exception.ShowNotFoundException;
 import com.jmill29.tvtrackerapi.model.Show;
 
+@Repository
 public class ShowDaoImpl implements ShowDao {
 
     private final DataSource dataSource;
 
+    @Autowired
     public ShowDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
