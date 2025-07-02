@@ -52,5 +52,12 @@ public interface UserWatchHistoryDao {
      * @return true if the show is in the watch history, false otherwise
      */
     boolean isShowInWatchHistory(int userId, int showId) throws SQLException;
-    
+
+    /**
+     * Retrieves the watch history for a specific user by username.
+     * * @param username the username of the user
+     * @return a list of shows in the user's watch history
+     * @throws SQLException if a database access error occurs
+     */
+    List<UserWatchHistoryDto> getWatchHistoryByUsername(String username, boolean getAll) throws SQLException;
 }
