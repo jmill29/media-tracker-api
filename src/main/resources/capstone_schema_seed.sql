@@ -45,7 +45,6 @@ CREATE TABLE genres (
 
 -- User Watch History Table
 CREATE TABLE user_watch_history (
-    history_id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     show_id INT NOT NULL,
     status ENUM('Not Watched', 'Want to Watch', 'Currently Watching', 'Already Watched') NOT NULL,
@@ -53,6 +52,7 @@ CREATE TABLE user_watch_history (
     rating INT DEFAULT NULL CHECK (rating IS NULL OR rating BETWEEN 1 AND 5),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     favorite BOOLEAN NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (user_id, show_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (show_id) REFERENCES tv_shows(show_id) ON DELETE CASCADE
 );
