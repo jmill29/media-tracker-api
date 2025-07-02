@@ -1,16 +1,36 @@
 package com.jmill29.tvtrackerapi.dto;
 
+/**
+ * Data Transfer Object representing a user's watch history for a show.
+ * Used to transfer show and watch status information for a user.
+ */
 public class UserWatchHistoryDto {
 
+    /** The unique ID of the show */
     private int showId;
+    /** The name of the show */
     private String showName;
+    /** The description of the show */
     private String description;
+    /** The image URL for the show */
     private String imageUrl;
+    /** The user's watch status for the show (e.g., "watched", "watching", "plan to watch") */
     private String status;
 
+    /**
+     * Default constructor.
+     */
     public UserWatchHistoryDto() {
     }
 
+    /**
+     * Constructs a UserWatchHistoryDto with all fields.
+     * @param showId the unique ID of the show
+     * @param showName the name of the show
+     * @param description the description of the show
+     * @param imageUrl the image URL for the show
+     * @param status the user's watch status for the show
+     */
     public UserWatchHistoryDto(int showId, String showName, String description, String imageUrl, String status) {
         this.showId = showId;
         this.showName = showName;
