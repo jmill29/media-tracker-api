@@ -37,7 +37,7 @@ public class ErrorResponse {
      * @param status    the HTTP status code
      * @param timestamp the time the error occurred (in milliseconds since epoch)
      */
-    public ErrorResponse(String message, int status, long timestamp) {
+    public ErrorResponse(int status, String message, long timestamp) {
         this.message = message;
         this.status = status;
         this.timestamp = timestamp;
