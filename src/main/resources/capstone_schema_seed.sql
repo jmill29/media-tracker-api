@@ -140,3 +140,17 @@ VALUES ('default', 'user', 'test123', 'default@email.com');
 -- Seed authorities table - assign default user a role
 INSERT INTO authorities (username, authority)
 VALUES ('user', 'ROLE_USER');
+
+-- Seed user_watch_history for default user (user_id = 1)
+INSERT INTO user_watch_history (user_id, show_id, status, episodes_watched, rating, favorite)
+VALUES
+(1, 1, 'Already Watched', 62, 5, TRUE),   -- Breaking Bad
+(1, 2, 'Want to Watch', 0, NULL, FALSE), -- Stranger Things
+(1, 3, 'Currently Watching', 28, NULL, TRUE), -- Game of Thrones
+(1, 4, 'Already Watched', 201, 4, FALSE), -- The Office
+(1, 5, 'Not Watched', 0, NULL, FALSE), -- The Mandalorian
+(1, 6, 'Already Watched', 236, 4, FALSE), -- Friends
+(1, 7, 'Want to Watch', 0, NULL, FALSE), -- The Witcher
+(1, 8, 'Currently Watching', 9, NULL, FALSE), -- Severance
+(1, 9, 'Not Watched', 0, NULL, FALSE), -- Attack on Titan
+(1, 10, 'Already Watched', 61, 5, TRUE); -- Avatar: The Last Airbender
