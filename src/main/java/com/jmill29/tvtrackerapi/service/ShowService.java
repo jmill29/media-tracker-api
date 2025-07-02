@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import com.jmill29.tvtrackerapi.exception.NoShowsFoundException;
+import com.jmill29.tvtrackerapi.exception.ShowNotFoundException;
 import com.jmill29.tvtrackerapi.model.Show;
 
 public interface ShowService {
@@ -19,7 +21,7 @@ public interface ShowService {
      * @return an {@code Optional} containing the {@code Show} if found, or empty if not found
      * @throws SQLException if a database access error occurs
      */
-    Optional<Show> findById(int id) throws SQLException;
+    Optional<Show> findById(int id) throws SQLException, ShowNotFoundException, IllegalArgumentException;
 
     /**
      * Retrieves all shows from the database.
@@ -31,7 +33,7 @@ public interface ShowService {
      * @return a {@code List} of all {@code Show} records
      * @throws SQLException if a database access error occurs
      */
-    List<Show> findAll() throws SQLException;
+    List<Show> findAll() throws SQLException, NoShowsFoundException;
 
     /**
      * Finds shows by their name (case-insensitive).
@@ -45,7 +47,7 @@ public interface ShowService {
      * @return a {@code List} of {@code Show} objects with matching names
      * @throws SQLException if a database access error occurs
      */
-    List<Show> findByName(String name) throws SQLException;
+    List<Show> findByName(String name) throws SQLException, ShowNotFoundException, IllegalArgumentException;
 
     /**
      * Finds shows by their genre.
@@ -58,7 +60,7 @@ public interface ShowService {
      * @return a {@code List} of {@code Show} objects in the specified genre
      * @throws SQLException if a database access error occurs
      */
-    List<Show> findByGenre(String genre) throws SQLException;
+    List<Show> findByGenre(String genre) throws SQLException, NoShowsFoundException, IllegalArgumentException;
 
     /**
      * Saves a show to the database.
