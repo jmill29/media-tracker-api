@@ -1,5 +1,8 @@
 package com.jmill29.tvtrackerapi.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
+
 /**
  * Enum representing the watch status of a show for a user.
  * Each status has a string value used for database storage and retrieval.
@@ -29,6 +32,7 @@ public enum WatchStatus {
      * Gets the string value used for database storage.
      * @return the database value
      */
+    @JsonValue
     public String getDbValue() {
         return dbValue;
     }
@@ -39,6 +43,7 @@ public enum WatchStatus {
      * @return the corresponding WatchStatus
      * @throws IllegalArgumentException if the value does not match any status
      */
+    @JsonCreator
     public static WatchStatus fromDbValue(String value) {
         for (WatchStatus status : values()) {
             if (status.dbValue.equalsIgnoreCase(value)) {
