@@ -12,7 +12,7 @@ import javax.sql.DataSource;
 import org.springframework.stereotype.Repository;
 
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryDto;
-import com.jmill29.tvtrackerapi.model.UserWatchHistory;
+import com.jmill29.tvtrackerapi.dto.UserWatchHistoryRequest;
 
 @Repository
 public class UserWatchHistoryDaoImpl implements UserWatchHistoryDao {
@@ -24,14 +24,14 @@ public class UserWatchHistoryDaoImpl implements UserWatchHistoryDao {
     }
 
     @Override
-    public boolean addShowToWatchHistory(UserWatchHistory userWatchHistory) throws SQLException {
+    public boolean addShowToWatchHistory(UserWatchHistoryRequest userWatchHistoryRequest, String username) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
-            String query = "INSERT INTO user_watch_history (user_id, show_id, status) VALUES (?, ?, ?)";
+            String query = "INSERT INTO user_watch_history (user_id, show_id, status) VALUES ((SELECT user_id FROM users WHERE username = ?), ?, ?)";
             PreparedStatement pStmt = conn.prepareStatement(query);
-            pStmt.setInt(1, userWatchHistory.getUserId());
-            pStmt.setInt(2, userWatchHistory.getShowId());
+            pStmt.setString(1, username);
+            pStmt.setInt(2, userWatchHistoryRequest.getShowId());
             // Store status as its DB value (enum to string)
-            pStmt.setString(3, userWatchHistory.getStatus().getDbValue());
+            pStmt.setString(3, userWatchHistoryRequest.getStatus().getDbValue());
             int rowsAffected = pStmt.executeUpdate();
             // Returns true if a row was inserted
             return rowsAffected > 0;
@@ -66,14 +66,15 @@ public class UserWatchHistoryDaoImpl implements UserWatchHistoryDao {
     }
 
     @Override
-    public boolean updateWatchStatus(UserWatchHistory userWatchHistory) throws SQLException {
+    public boolean updateWatchStatus(UserWatchHistoryRequest userWatchHistory, String username) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
-            String query = "UPDATE user_watch_history SET status = ? WHERE user_id = ? AND show_id = ?";
+            String query = "UPDATE user_watch_history SET status = ? WHERE show_id = ? AND user_id = ( " +
+                    "SELECT user_id FROM users WHERE username = ?)";
             PreparedStatement pStmt = conn.prepareStatement(query);
             // Update the status for a specific user-show pair
             pStmt.setString(1, userWatchHistory.getStatus().getDbValue());
-            pStmt.setInt(2, userWatchHistory.getUserId());
-            pStmt.setInt(3, userWatchHistory.getShowId());
+            pStmt.setInt(2, userWatchHistory.getShowId());
+            pStmt.setString(3, username);
             int rowsAffected = pStmt.executeUpdate();
             // Returns true if a row was updated
             return rowsAffected > 0;
@@ -81,12 +82,13 @@ public class UserWatchHistoryDaoImpl implements UserWatchHistoryDao {
     }
 
     @Override
-    public boolean deleteShowFromWatchHistory(int userId, int showId) throws SQLException {
+    public boolean deleteShowFromWatchHistory(String username, int showId) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
-            String query = "DELETE FROM user_watch_history WHERE user_id = ? AND show_id = ?";
+            String query = "DELETE FROM user_watch_history WHERE show_id = ? AND user_id = ( " +
+                    "SELECT user_id FROM users WHERE username = ?)";
             PreparedStatement pStmt = conn.prepareStatement(query);
-            pStmt.setInt(1, userId);
-            pStmt.setInt(2, showId);
+            pStmt.setInt(1, showId);
+            pStmt.setString(2, username);
             int rowsAffected = pStmt.executeUpdate();
             // Returns true if a row was deleted
             return rowsAffected > 0;
@@ -94,11 +96,13 @@ public class UserWatchHistoryDaoImpl implements UserWatchHistoryDao {
     }
 
     @Override
-    public boolean isShowInWatchHistory(int userId, int showId) throws SQLException {
+    public boolean isShowInWatchHistory(String username, int showId) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
-            String query = "SELECT * FROM user_watch_history WHERE user_id = ? AND show_id = ?";
+            String query = "SELECT * FROM user_watch_history WHERE user_id = " +
+                            "(SELECT user_id FROM users WHERE username = ?)" +
+                            "AND show_id = ?";
             PreparedStatement pStmt = conn.prepareStatement(query);
-            pStmt.setInt(1, userId);
+            pStmt.setString(1, username);
             pStmt.setInt(2, showId);
             ResultSet rs = pStmt.executeQuery();
             // Returns true if a row exists for this user-show pair
