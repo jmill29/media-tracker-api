@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
  * Data Transfer Object representing a user in the system.
  * Used to transfer user data between layers without exposing sensitive information.
  */
-public class UserDto {
+public class UserResponse {
     /** The unique ID of the user */
     private int userId;
     /** The full name of the user */
@@ -21,7 +21,7 @@ public class UserDto {
     /**
      * Default constructor.
      */
-    public UserDto() {
+    public UserResponse() {
     }
 
     /**
@@ -32,7 +32,7 @@ public class UserDto {
      * @param email the user's email address
      * @param createdAt the date and time the user was created
      */
-    public UserDto(int userId, String name, String username, String email, LocalDateTime createdAt) {
+    public UserResponse(int userId, String name, String username, String email, LocalDateTime createdAt) {
         this.userId = userId;
         this.name = name;
         this.username = username;
