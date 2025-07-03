@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.jmill29.tvtrackerapi.dao.UserWatchHistoryDao;
-import com.jmill29.tvtrackerapi.dto.UserWatchHistoryDto;
+import com.jmill29.tvtrackerapi.dto.UserWatchHistoryResponse;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryRequest;
 import com.jmill29.tvtrackerapi.exception.DatabaseException;
 import com.jmill29.tvtrackerapi.exception.UserNotFoundException;
@@ -65,7 +65,7 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
      * @throws WatchHistoryNotFoundException if no watch history is found for the user
      */
     @Override
-    public List<UserWatchHistoryDto> getWatchHistoryByUserId(int userId, boolean getAll) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
+    public List<UserWatchHistoryResponse> getWatchHistoryByUserId(int userId, boolean getAll) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
         try {
             // check if userId is less than or equal to 0
             if (userId <= 0) {
@@ -79,7 +79,7 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
                 );
             }
 
-            List<UserWatchHistoryDto> watchHistories = userWatchHistoryDao.getWatchHistoryByUserId(userId, getAll);
+            List<UserWatchHistoryResponse> watchHistories = userWatchHistoryDao.getWatchHistoryByUserId(userId, getAll);
             
             // check if the list is empty
             if (!getAll && watchHistories.isEmpty()) {
@@ -182,11 +182,11 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
      * @throws WatchHistoryNotFoundException if no watch history is found for the user
      */
     @Override
-    public List<UserWatchHistoryDto> getWatchHistoryByUsername(String username, boolean getAll) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
+    public List<UserWatchHistoryResponse> getWatchHistoryByUsername(String username, boolean getAll) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
         validateUsername(username);
 
         try {
-            List<UserWatchHistoryDto> watchHistories = userWatchHistoryDao.getWatchHistoryByUsername(username, getAll);
+            List<UserWatchHistoryResponse> watchHistories = userWatchHistoryDao.getWatchHistoryByUsername(username, getAll);
 
             if (!getAll && watchHistories.isEmpty()) {
                 throw new WatchHistoryNotFoundException(

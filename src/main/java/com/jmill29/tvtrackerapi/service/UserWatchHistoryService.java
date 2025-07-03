@@ -2,8 +2,8 @@ package com.jmill29.tvtrackerapi.service;
 
 import java.util.List;
 
-import com.jmill29.tvtrackerapi.dto.UserWatchHistoryDto;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryRequest;
+import com.jmill29.tvtrackerapi.dto.UserWatchHistoryResponse;
 import com.jmill29.tvtrackerapi.exception.DatabaseException;
 import com.jmill29.tvtrackerapi.exception.WatchHistoryNotFoundException;
 
@@ -30,7 +30,7 @@ public interface UserWatchHistoryService {
      * @throws DatabaseException if a database access error occurs
      * @throws WatchHistoryNotFoundException if no watch history is found for the user
      */
-    List<UserWatchHistoryDto> getWatchHistoryByUserId(int userId, boolean getAll) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException;
+    List<UserWatchHistoryResponse> getWatchHistoryByUserId(int userId, boolean getAll) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException;
 
     /**
      * Updates the watch status of a show in the user's watch history.
@@ -77,6 +77,6 @@ public interface UserWatchHistoryService {
      * @throws DatabaseException if a database access error occurs
      * @throws WatchHistoryNotFoundException if no watch history is found for the user
      */
-    List<UserWatchHistoryDto> getWatchHistoryByUsername(String username, boolean getAll) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException;
+    List<UserWatchHistoryResponse> getWatchHistoryByUsername(String username, boolean getAll) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException;
 
 }
