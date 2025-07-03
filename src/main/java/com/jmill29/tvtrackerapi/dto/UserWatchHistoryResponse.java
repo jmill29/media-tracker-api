@@ -4,7 +4,7 @@ package com.jmill29.tvtrackerapi.dto;
  * Data Transfer Object representing a user's watch history for a show.
  * Used to transfer show and watch status information for a user.
  */
-public class UserWatchHistoryDto {
+public class UserWatchHistoryResponse {
 
     /** The unique ID of the show */
     private int showId;
@@ -20,7 +20,7 @@ public class UserWatchHistoryDto {
     /**
      * Default constructor.
      */
-    public UserWatchHistoryDto() {
+    public UserWatchHistoryResponse() {
     }
 
     /**
@@ -31,7 +31,7 @@ public class UserWatchHistoryDto {
      * @param imageUrl the image URL for the show
      * @param status the user's watch status for the show
      */
-    public UserWatchHistoryDto(int showId, String showName, String description, String imageUrl, String status) {
+    public UserWatchHistoryResponse(int showId, String showName, String description, String imageUrl, String status) {
         this.showId = showId;
         this.showName = showName;
         this.description = description;
