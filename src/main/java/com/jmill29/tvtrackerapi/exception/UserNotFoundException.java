@@ -1,5 +1,8 @@
 package com.jmill29.tvtrackerapi.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
 /**
  * Thrown to indicate that a user could not be found in the system.
  * <p>
@@ -7,6 +10,7 @@ package com.jmill29.tvtrackerapi.exception;
  * user retrieval operations fail.
  * </p>
  */
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class UserNotFoundException extends RuntimeException {
 
     /**

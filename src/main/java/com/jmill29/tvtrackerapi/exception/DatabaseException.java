@@ -1,5 +1,14 @@
 package com.jmill29.tvtrackerapi.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+
+/**
+ * Exception thrown when a database operation fails.
+ * Results in a 500 Internal Server Error response.
+ */
+@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class DatabaseException extends RuntimeException {
 
     /**

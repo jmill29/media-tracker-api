@@ -1,5 +1,13 @@
 package com.jmill29.tvtrackerapi.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+/**
+ * Exception thrown when a watch history entry already exists for a user and show.
+ * Results in a 409 Conflict HTTP response.
+ */
+@ResponseStatus(HttpStatus.CONFLICT)
 public class WatchHistoryAlreadyExistsException extends RuntimeException {
 
     /**

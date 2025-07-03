@@ -1,5 +1,12 @@
 package com.jmill29.tvtrackerapi.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+/**
+ * Exception thrown when no shows are found in the database.
+ */
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class NoShowsFoundException extends RuntimeException {
 
     /**

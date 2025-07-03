@@ -1,5 +1,14 @@
 package com.jmill29.tvtrackerapi.exception;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+
+/**
+ * Exception thrown when no watch history is found for the specified user.
+ * Results in a 404 Not Found HTTP response.
+ */
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class WatchHistoryNotFoundException extends RuntimeException {
 
     /**
