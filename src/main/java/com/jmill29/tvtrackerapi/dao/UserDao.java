@@ -4,7 +4,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import com.jmill29.tvtrackerapi.dto.UserDto;
+import com.jmill29.tvtrackerapi.dto.UserResponse;
+import com.jmill29.tvtrackerapi.exception.UserAlreadyExistsException;
+import com.jmill29.tvtrackerapi.exception.UserNotFoundException;
 import com.jmill29.tvtrackerapi.model.User;
 
 /**
@@ -15,15 +17,15 @@ public interface UserDao {
     /**
      * Finds a user by their unique ID.
      * <p>
-     * Searches the database for a user with the specified ID and returns the corresponding {@link UserDto}
+     * Searches the database for a user with the specified ID and returns the corresponding {@link UserResponse}
      * wrapped in an {@link Optional}, or an empty {@code Optional} if no user is found.
      * </p>
      *
      * @param id the ID of the user to find
-     * @return an {@code Optional<UserDto>} if the user exists, or {@code Optional.empty()} otherwise
+     * @return an {@code Optional<UserResponse>} if the user exists, or {@code Optional.empty()} otherwise
      * @throws SQLException if a database access error occurs
      */
-    Optional<UserDto> findById(int id) throws SQLException;
+    Optional<UserResponse> findById(int id) throws SQLException;
 
     /**
      * Finds a user by their username.
@@ -32,21 +34,21 @@ public interface UserDao {
      * </p>
      *
      * @param username the username to search for
-     * @return an {@code Optional<UserDto>} if the user exists, or {@code Optional.empty()} otherwise
+     * @return an {@code Optional<UserResponse>} if the user exists, or {@code Optional.empty()} otherwise
      * @throws SQLException if a database access error occurs
      */
-    Optional<UserDto> findByUsername(String username) throws SQLException;
+    Optional<UserResponse> findByUsername(String username) throws SQLException;
 
     /**
      * Retrieves all users from the database.
      * <p>
-     * Returns a list of all users as {@link UserDto} objects, excluding sensitive fields like passwords.
+     * Returns a list of all users as {@link UserResponse} objects, excluding sensitive fields such as passwords.
      * </p>
      *
-     * @return a {@code List<UserDto>} of all users in the system
+     * @return a {@code List<UserResponse>} of all users in the system
      * @throws SQLException if a database access error occurs
      */
-    List<UserDto> findAll() throws SQLException;
+    List<UserResponse> findAll() throws SQLException;
 
     /**
      * Saves a user to the database.
@@ -58,8 +60,10 @@ public interface UserDao {
      * @param user the {@link User} object to insert or update
      * @return {@code true} if the operation was successful, {@code false} otherwise
      * @throws SQLException if a database access error occurs
+     * @throws UserAlreadyExistsException if the user already exists when attempting to create a new user
+     * @throws UserNotFoundException if the user does not exist when attempting to update
      */
-    boolean save(User user) throws SQLException;
+    boolean save(User user) throws SQLException, UserAlreadyExistsException, UserNotFoundException;
 
     /**
      * Deletes a user by their unique ID.
