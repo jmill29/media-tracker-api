@@ -135,7 +135,7 @@ INSERT INTO show_genres (show_id, genre_id) VALUES
 
 -- Seed users Table with 1 user (default user)
 INSERT INTO users (name, username, password, email)
-VALUES ('default', 'user', 'test123', 'default@email.com');
+VALUES ('default', 'user', '$2a$10$bP/Xi10wMBZJhrkaR5jrSeER4lGpvZfxTR6PBfDc5lRSIm29ZjIpa', 'default@email.com');
 
 -- Seed authorities table - assign default user a role
 INSERT INTO authorities (username, authority)
