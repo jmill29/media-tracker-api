@@ -10,13 +10,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jmill29.tvtrackerapi.dto.UserWatchHistoryDto;
+import com.jmill29.tvtrackerapi.dto.UserWatchHistoryResponse;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryRequest;
 import com.jmill29.tvtrackerapi.service.UserWatchHistoryService;
+import com.jmill29.tvtrackerapi.utils.AuthUtil;
 
 @RestController
 @RequestMapping("/api/watch-history")
@@ -30,27 +32,47 @@ public class UserWatchHistoryController {
     }
 
     // Define endpoints for user watch history operations here
-    @GetMapping("/{username}")
-    public ResponseEntity<List<UserWatchHistoryDto>> getWatchHistoryByUsername(@PathVariable String username, @RequestParam(required = false, defaultValue = "false") boolean getAll) {
-        List<UserWatchHistoryDto> watchHistory = userWatchHistoryService.getWatchHistoryByUsername(username, getAll);
+    @GetMapping
+    public ResponseEntity<List<UserWatchHistoryResponse>> getWatchHistoryByUsername(
+        @RequestParam(required = false, defaultValue = "false") boolean getAll,
+        @RequestHeader("Authorization") String authHeader) {
+        List<UserWatchHistoryResponse> watchHistory = userWatchHistoryService.getWatchHistoryByUsername(
+            AuthUtil.extractUsernameFromAuthHeader(authHeader),
+            getAll
+            );
         return ResponseEntity.ok(watchHistory);
     }
 
-    @PostMapping("/{username}")
-    public ResponseEntity<String> addShowToWatchHistory(@RequestBody UserWatchHistoryRequest userWatchHistoryRequest, @PathVariable String username) {
-        userWatchHistoryService.addShowToWatchHistory(userWatchHistoryRequest, username);
+    @PostMapping
+    public ResponseEntity<String> addShowToWatchHistory(
+        @RequestBody UserWatchHistoryRequest userWatchHistoryRequest,
+        @RequestHeader("Authorization") String authHeader) {
+        userWatchHistoryService.addShowToWatchHistory(
+            userWatchHistoryRequest,
+            AuthUtil.extractUsernameFromAuthHeader(authHeader)
+            );
         return ResponseEntity.ok("Show added to watch history successfully.");
     }
 
-    @PutMapping("/{username}")
-    public ResponseEntity<String> updateWatchStatus(@RequestBody UserWatchHistoryRequest userWatchHistoryRequest, @PathVariable String username) {
-        userWatchHistoryService.updateWatchStatus(userWatchHistoryRequest, username);
+    @PutMapping
+    public ResponseEntity<String> updateWatchStatus(
+        @RequestBody UserWatchHistoryRequest userWatchHistoryRequest,
+        @RequestHeader("Authorization") String authHeader) {
+        userWatchHistoryService.updateWatchStatus(
+            userWatchHistoryRequest,
+            AuthUtil.extractUsernameFromAuthHeader(authHeader)
+            );
         return ResponseEntity.ok("Watch status updated successfully.");
     }
 
-    @DeleteMapping("/{username}/{showId}")
-    public ResponseEntity<String> deleteShowFromWatchHistory(@PathVariable String username, @PathVariable int showId) {
-        userWatchHistoryService.deleteShowFromWatchHistory(username, showId);
+    @DeleteMapping("/{showId}")
+    public ResponseEntity<String> deleteShowFromWatchHistory(
+        @PathVariable int showId,
+        @RequestHeader("Authorization") String authHeader) {
+        userWatchHistoryService.deleteShowFromWatchHistory(
+            AuthUtil.extractUsernameFromAuthHeader(authHeader),
+            showId
+            );
         return ResponseEntity.ok("Show removed from watch history successfully.");
     }
 }
