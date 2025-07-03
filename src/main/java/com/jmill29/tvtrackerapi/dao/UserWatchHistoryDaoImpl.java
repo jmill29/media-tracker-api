@@ -11,8 +11,8 @@ import javax.sql.DataSource;
 
 import org.springframework.stereotype.Repository;
 
-import com.jmill29.tvtrackerapi.dto.UserWatchHistoryDto;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryRequest;
+import com.jmill29.tvtrackerapi.dto.UserWatchHistoryResponse;
 
 @Repository
 public class UserWatchHistoryDaoImpl implements UserWatchHistoryDao {
@@ -39,7 +39,7 @@ public class UserWatchHistoryDaoImpl implements UserWatchHistoryDao {
     }
 
     @Override
-    public List<UserWatchHistoryDto> getWatchHistoryByUserId(int userId, boolean getAll) throws SQLException {
+    public List<UserWatchHistoryResponse> getWatchHistoryByUserId(int userId, boolean getAll) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             String query;
             if (!getAll) {
@@ -56,7 +56,7 @@ public class UserWatchHistoryDaoImpl implements UserWatchHistoryDao {
             PreparedStatement pStmt = conn.prepareStatement(query);
             pStmt.setInt(1, userId);
             ResultSet rs = pStmt.executeQuery();
-            List<UserWatchHistoryDto> watchHistory = new ArrayList<>();
+            List<UserWatchHistoryResponse> watchHistory = new ArrayList<>();
             while (rs.next()) {
                 // Map each row to a DTO, handling null status
                 watchHistory.add(mapUserWatchHistoryDto(rs));
@@ -111,7 +111,7 @@ public class UserWatchHistoryDaoImpl implements UserWatchHistoryDao {
     }
 
     @Override
-    public List<UserWatchHistoryDto> getWatchHistoryByUsername(String username, boolean getAll) throws SQLException {
+    public List<UserWatchHistoryResponse> getWatchHistoryByUsername(String username, boolean getAll) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             String query;
             if (!getAll) {
@@ -130,7 +130,7 @@ public class UserWatchHistoryDaoImpl implements UserWatchHistoryDao {
             PreparedStatement pStmt = conn.prepareStatement(query);
             pStmt.setString(1, username);
             ResultSet rs = pStmt.executeQuery();
-            List<UserWatchHistoryDto> watchHistory = new ArrayList<>();
+            List<UserWatchHistoryResponse> watchHistory = new ArrayList<>();
             while (rs.next()) {
                 // Map each row to a DTO, handling null status
                 watchHistory.add(mapUserWatchHistoryDto(rs));
@@ -140,9 +140,9 @@ public class UserWatchHistoryDaoImpl implements UserWatchHistoryDao {
     }
 
     
-    private UserWatchHistoryDto mapUserWatchHistoryDto(ResultSet rs) throws SQLException {
+    private UserWatchHistoryResponse mapUserWatchHistoryDto(ResultSet rs) throws SQLException {
         // Map a ResultSet row to a UserWatchHistoryDto, defaulting status if null
-        UserWatchHistoryDto dto = new UserWatchHistoryDto(
+        UserWatchHistoryResponse dto = new UserWatchHistoryResponse(
             rs.getInt("show_id"),
             rs.getString("show_name"),
             rs.getString("description"),

@@ -3,8 +3,8 @@ package com.jmill29.tvtrackerapi.dao;
 import java.sql.SQLException;
 import java.util.List;
 
-import com.jmill29.tvtrackerapi.dto.UserWatchHistoryDto;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryRequest;
+import com.jmill29.tvtrackerapi.dto.UserWatchHistoryResponse;
 
 public interface UserWatchHistoryDao {
 
@@ -26,7 +26,7 @@ public interface UserWatchHistoryDao {
      * @return a list of UserWatchHistoryDto objects representing the user's watch history
      * @throws SQLException if a database access error occurs
      */
-    List<UserWatchHistoryDto> getWatchHistoryByUserId(int userId, boolean getAll) throws SQLException;
+    List<UserWatchHistoryResponse> getWatchHistoryByUserId(int userId, boolean getAll) throws SQLException;
 
     /**
      * Updates the watch status of a show in the user's watch history.
@@ -65,5 +65,5 @@ public interface UserWatchHistoryDao {
      * @return a list of UserWatchHistoryDto objects representing the user's watch history
      * @throws SQLException if a database access error occurs
      */
-    List<UserWatchHistoryDto> getWatchHistoryByUsername(String username, boolean getAll) throws SQLException;
+    List<UserWatchHistoryResponse> getWatchHistoryByUsername(String username, boolean getAll) throws SQLException;
 }
