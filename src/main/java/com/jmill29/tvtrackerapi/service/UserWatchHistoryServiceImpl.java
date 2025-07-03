@@ -7,76 +7,213 @@ import org.springframework.stereotype.Service;
 
 import com.jmill29.tvtrackerapi.dao.UserWatchHistoryDao;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryDto;
+import com.jmill29.tvtrackerapi.dto.UserWatchHistoryRequest;
+import com.jmill29.tvtrackerapi.exception.DatabaseException;
+import com.jmill29.tvtrackerapi.exception.UserNotFoundException;
 import com.jmill29.tvtrackerapi.exception.WatchHistoryAlreadyExistsException;
 import com.jmill29.tvtrackerapi.exception.WatchHistoryNotFoundException;
-import com.jmill29.tvtrackerapi.model.UserWatchHistory;
 
+
+/**
+ * Service implementation for user watch history operations.
+ * Handles business logic and exception translation for watch history features.
+ */
 @Service
 public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
 
     private final UserWatchHistoryDao userWatchHistoryDao;
+    private final UserService userService;
 
-    public UserWatchHistoryServiceImpl(UserWatchHistoryDao userWatchHistoryDao) {
+    public UserWatchHistoryServiceImpl(UserWatchHistoryDao userWatchHistoryDao, UserService userService) {
         this.userWatchHistoryDao = userWatchHistoryDao;
+        this.userService = userService;
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws IllegalArgumentException if the request is null, username is invalid, or show already exists in watch history
+     * @throws DatabaseException if a database error occurs
+     */
     @Override
-    public boolean addShowToWatchHistory(UserWatchHistory userWatchHistory) throws SQLException, WatchHistoryAlreadyExistsException {
+    public boolean addShowToWatchHistory(UserWatchHistoryRequest userWatchHistoryRequest, String username) throws IllegalArgumentException, DatabaseException {
+        // check if userWatchHistoryRequest is null
+        if (userWatchHistoryRequest == null) {
+            throw new IllegalArgumentException("Must include a Request Body");
+        }
+
+        validateUsername(username);
+
         // Check if the show is already in the user's watch history
-        if (userWatchHistoryDao.isShowInWatchHistory(userWatchHistory.getUserId(), userWatchHistory.getShowId())) {
-            // If it is, throw a WatchHistoryAlreadyExistsException
+        if (isShowInWatchHistory(username, userWatchHistoryRequest.getShowId())) {
             throw new WatchHistoryAlreadyExistsException(
-                "Show with ID " + userWatchHistory.getShowId() + " is already in the watch history for user ID " + userWatchHistory.getUserId()
+                "Show ID " + userWatchHistoryRequest.getShowId() + " is already in watch history for user " + username
             );
         }
 
-        return userWatchHistoryDao.addShowToWatchHistory(userWatchHistory);
+        try {
+            return userWatchHistoryDao.addShowToWatchHistory(userWatchHistoryRequest, username);
+        } catch (SQLException ex) {
+            // If a SQLException occurs, wrap it in a DatabaseException
+            throw new DatabaseException("Database error occurred while adding show ID " + userWatchHistoryRequest.getShowId() + " to watch history for user " + username + ", " + ex);
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws IllegalArgumentException if userId is invalid or user does not exist
+     * @throws DatabaseException if a database error occurs
+     * @throws WatchHistoryNotFoundException if no watch history is found for the user
+     */
     @Override
-    public List<UserWatchHistoryDto> getWatchHistoryByUserId(int userId, boolean getAll) throws SQLException, WatchHistoryNotFoundException {
-        List<UserWatchHistoryDto> watchHistories = userWatchHistoryDao.getWatchHistoryByUserId(userId, getAll);
+    public List<UserWatchHistoryDto> getWatchHistoryByUserId(int userId, boolean getAll) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
+        try {
+            // check if userId is less than or equal to 0
+            if (userId <= 0) {
+                throw new IllegalArgumentException("User ID must be greater than 0");
+            }
 
-        // check if the list is empty
-        if (!getAll && watchHistories.isEmpty()) {
-            // If the list is empty, throw a WatchHistoryNotFoundException
+            // check if user exists by userId
+            if (userService.findById(userId).isEmpty()) {
+                throw new UserNotFoundException(
+                    "User with ID " + userId + " does not exist"
+                );
+            }
+
+            List<UserWatchHistoryDto> watchHistories = userWatchHistoryDao.getWatchHistoryByUserId(userId, getAll);
+            
+            // check if the list is empty
+            if (!getAll && watchHistories.isEmpty()) {
+                throw new WatchHistoryNotFoundException(
+                        "No watch history found for user ID " + userId
+                );
+            }
+            
+            return watchHistories;
+        } catch (SQLException ex) {
+            throw new DatabaseException("Database error occurred while retrieving watch history for user ID " + userId + ", " + ex);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws IllegalArgumentException if the request is null, username is invalid, or watch history does not exist
+     * @throws DatabaseException if a database error occurs
+     * @throws WatchHistoryNotFoundException if the watch history entry does not exist or update fails
+     */
+    @Override
+    public boolean updateWatchStatus(UserWatchHistoryRequest userWatchHistoryRequest, String username) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
+        if (userWatchHistoryRequest == null) {
+            throw new IllegalArgumentException("UserWatchHistory cannot be null");
+        }
+
+        validateUsername(username);
+        
+        // check if watch history exists for the user and show
+        if (!this.isShowInWatchHistory(username, userWatchHistoryRequest.getShowId())) {
             throw new WatchHistoryNotFoundException(
-                "No watch history found for user ID " + userId
+                    "Watch history for show ID " + userWatchHistoryRequest.getShowId() + " for user " + username + " does not exist"
             );
-        }
+        } 
 
-        return watchHistories;
-    }
-
-    @Override
-    public boolean updateWatchStatus(UserWatchHistory userWatchHistory) throws SQLException, WatchHistoryNotFoundException {
-        if (userWatchHistoryDao.updateWatchStatus(userWatchHistory)) {
-            return true;
-        } else {
-            // If the update fails, throw a UserWatchHistoryNotFoundException
-            throw new WatchHistoryNotFoundException(
-                "Failed to update watch status for show ID " + userWatchHistory.getShowId() + " for user ID " + userWatchHistory.getUserId()
-            );
+        try {
+            if (userWatchHistoryDao.updateWatchStatus(userWatchHistoryRequest, username)) {
+                return true;
+            } else {
+                throw new WatchHistoryNotFoundException(
+                        "Failed to update watch status for show ID " + userWatchHistoryRequest.getShowId() + " for user " + username
+                );
+            }
+        } catch (SQLException ex) {
+            throw new DatabaseException("Database error occurred while updating watch status for user " + username + ", " + ex);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws IllegalArgumentException if username or showId is invalid
+     * @throws DatabaseException if a database error occurs
+     * @throws WatchHistoryNotFoundException if the watch history entry does not exist or deletion fails
+     */
     @Override
-    public boolean deleteShowFromWatchHistory(int userId, int showId) throws SQLException, WatchHistoryNotFoundException {
-        if (userWatchHistoryDao.deleteShowFromWatchHistory(userId, showId)) {
-            return true;
-        } else {
-            // If the deletion fails, throw a WatchHistoryNotFoundException
-            throw new WatchHistoryNotFoundException(
-                "Failed to delete show ID " + showId + " from watch history for user ID " + userId
-            );
+    public boolean deleteShowFromWatchHistory(String username, int showId) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
+        validateUsername(username);
+
+        if (showId <= 0) {
+            throw new IllegalArgumentException("Show ID must be greater than 0");
+        }
+        
+        try {
+            if (userWatchHistoryDao.deleteShowFromWatchHistory(username, showId)) {
+                return true;
+            } else {
+                throw new WatchHistoryNotFoundException(
+                        "Failed to delete show ID " + showId + " from watch history for user " + username
+                );
+            }
+        } catch (SQLException ex) {
+            throw new DatabaseException("Database error occurred while deleting show ID " + showId + " from watch history for user with username " + username + ", " + ex);
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws IllegalArgumentException if username or showId is invalid
+     * @throws DatabaseException if a database error occurs
+     */
     @Override
-    public boolean isShowInWatchHistory(int userId, int showId) throws SQLException {
-        return userWatchHistoryDao.isShowInWatchHistory(userId, showId);
+    public boolean isShowInWatchHistory(String username, int showId) throws IllegalArgumentException, DatabaseException {
+        validateUsername(username);
+
+        if (showId <= 0) {
+            throw new IllegalArgumentException("ShowId must be greater than 0");
+        }
+
+        try {
+            return userWatchHistoryDao.isShowInWatchHistory(username, showId);
+        } catch (SQLException ex) {
+            throw new DatabaseException("Database error occurred while checking if show ID " + showId + " is in watch history for user " + username + ", " + ex);
+        }
     }
 
+    /**
+     * {@inheritDoc}
+     * @throws IllegalArgumentException if username is invalid
+     * @throws DatabaseException if a database error occurs
+     * @throws WatchHistoryNotFoundException if no watch history is found for the user
+     */
+    @Override
+    public List<UserWatchHistoryDto> getWatchHistoryByUsername(String username, boolean getAll) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
+        validateUsername(username);
 
+        try {
+            List<UserWatchHistoryDto> watchHistories = userWatchHistoryDao.getWatchHistoryByUsername(username, getAll);
 
+            if (!getAll && watchHistories.isEmpty()) {
+                throw new WatchHistoryNotFoundException(
+                    "No watch history found for user with username " + username
+                );
+            }
+
+            return watchHistories;
+        } catch (SQLException e) {
+            throw new DatabaseException("Database error occurred while retrieving watch history for user " + username + ", " + e);
+        }
+    }
+
+    /**
+     * Validates the provided username and checks if the user exists.
+     *
+     * @param username the username to validate
+     * @throws IllegalArgumentException if the username is null or empty
+     * @throws UserNotFoundException if the user does not exist in the system
+     */
+    private void validateUsername(String username) throws IllegalArgumentException, UserNotFoundException {
+        if (username == null || username.trim().isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be null or empty");
+        }
+
+        if (userService.findByUsername(username).isEmpty()) {
+            throw new UserNotFoundException("User with username " + username + " does not exist");
+        }
+    }
 } 

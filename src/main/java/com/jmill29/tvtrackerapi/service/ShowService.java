@@ -4,7 +4,9 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import com.jmill29.tvtrackerapi.exception.DatabaseException;
 import com.jmill29.tvtrackerapi.exception.NoShowsFoundException;
+import com.jmill29.tvtrackerapi.exception.ShowAlreadyExistsException;
 import com.jmill29.tvtrackerapi.exception.ShowNotFoundException;
 import com.jmill29.tvtrackerapi.model.Show;
 
@@ -19,9 +21,11 @@ public interface ShowService {
      *
      * @param id the ID of the show
      * @return an {@code Optional} containing the {@code Show} if found, or empty if not found
-     * @throws SQLException if a database access error occurs
+     * @throws IllegalArgumentException if the ID is invalid (e.g., less than or equal to 0)
+     * @throws DatabaseException if a database access error occurs
+     * @throws ShowNotFoundException if no show is found with the given ID
      */
-    Optional<Show> findById(int id) throws SQLException, ShowNotFoundException, IllegalArgumentException;
+    Optional<Show> findById(int id) throws IllegalArgumentException, DatabaseException, ShowNotFoundException;
 
     /**
      * Retrieves all shows from the database.
@@ -31,9 +35,10 @@ public interface ShowService {
      * </p>
      *
      * @return a {@code List} of all {@code Show} records
-     * @throws SQLException if a database access error occurs
+     * @throws DatabaseException if a database access error occurs
+     * @throws NoShowsFoundException if no shows are found in the database
      */
-    List<Show> findAll() throws SQLException, NoShowsFoundException;
+    List<Show> findAll() throws DatabaseException, NoShowsFoundException;
 
     /**
      * Finds shows by their name (case-insensitive).
@@ -45,9 +50,11 @@ public interface ShowService {
      *
      * @param name the name of the show to search for
      * @return a {@code List} of {@code Show} objects with matching names
-     * @throws SQLException if a database access error occurs
+     * @throws IllegalArgumentException if the name is null or empty
+     * @throws DatabaseException if a database access error occurs
+     * @throws ShowNotFoundException if no shows are found with the given name
      */
-    List<Show> findByName(String name) throws SQLException, ShowNotFoundException, IllegalArgumentException;
+    List<Show> findByName(String name) throws IllegalArgumentException, DatabaseException, ShowNotFoundException;
 
     /**
      * Finds shows by their genre.
@@ -58,9 +65,11 @@ public interface ShowService {
      *
      * @param genre the genre to search for
      * @return a {@code List} of {@code Show} objects in the specified genre
-     * @throws SQLException if a database access error occurs
+     * @throws IllegalArgumentException if the genre is null or empty
+     * @throws DatabaseException if a database access error occurs
+     * @throws NoShowsFoundException if no shows are found for the given genre
      */
-    List<Show> findByGenre(String genre) throws SQLException, NoShowsFoundException, IllegalArgumentException;
+    List<Show> findByGenre(String genre) throws IllegalArgumentException, DatabaseException, NoShowsFoundException;
 
     /**
      * Saves a show to the database.
@@ -72,9 +81,10 @@ public interface ShowService {
      *
      * @param show the {@link Show} object to insert or update
      * @return {@code true} if the operation was successful, {@code false} otherwise
+     * @throws IllegalArgumentException if the show object is null or contains invalid fields
      * @throws SQLException if a database access error occurs
      */
-    boolean save(Show show) throws SQLException;
+    boolean save(Show show) throws IllegalArgumentException, DatabaseException, ShowAlreadyExistsException, ShowNotFoundException;
 
     /**
      * Deletes a show by its unique ID.
@@ -85,8 +95,9 @@ public interface ShowService {
      *
      * @param id the ID of the show to delete
      * @return {@code true} if the show was deleted successfully, {@code false} otherwise
-     * @throws SQLException if a database access error occurs
+     * @throws IllegalArgumentException if the ID is invalid (e.g., less than or equal to 0)
+     * @throws DatabaseException if a database access error occurs
      */
-    boolean deleteById(int id) throws SQLException;
+    boolean deleteById(int id) throws IllegalArgumentException, DatabaseException;
 
 }

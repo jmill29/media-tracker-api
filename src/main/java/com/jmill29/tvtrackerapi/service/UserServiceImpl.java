@@ -7,7 +7,10 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.jmill29.tvtrackerapi.dao.UserDao;
-import com.jmill29.tvtrackerapi.dto.UserDto;
+import com.jmill29.tvtrackerapi.dto.UserResponse;
+import com.jmill29.tvtrackerapi.exception.DatabaseException;
+import com.jmill29.tvtrackerapi.exception.UserAlreadyExistsException;
+import com.jmill29.tvtrackerapi.exception.UserNotFoundException;
 import com.jmill29.tvtrackerapi.model.User;
 
 
@@ -28,53 +31,83 @@ public class UserServiceImpl implements UserService {
         this.userDao = userDao;
     }
 
-    @Override
     /**
-     * Finds a user by their unique ID.
-     * @param id the user ID
-     * @return an Optional containing the UserDto if found, or empty if not found
+     * {@inheritDoc}
      */
-    public Optional<UserDto> findById(int id) throws SQLException {
-        return userDao.findById(id);
+    @Override
+    public Optional<UserResponse> findById(int id) throws IllegalArgumentException, DatabaseException {
+        // check if id greater than 0
+        if (id <= 0) {
+            throw new IllegalArgumentException("User ID must be greater than 0");
+        }
+
+        try {
+            return userDao.findById(id);
+        } catch (SQLException ex) {
+            throw new DatabaseException("Error retrieving user by ID: " + id + ", " + ex);
+        }
     }
 
-    @Override
     /**
-     * Finds a user by their username.
-     * @param username the username to search for
-     * @return an Optional containing the UserDto if found, or empty if not found
+     * {@inheritDoc}
      */
-    public Optional<UserDto> findByUsername(String username) throws SQLException {
-        return userDao.findByUsername(username);
+    @Override
+    public Optional<UserResponse> findByUsername(String username) throws IllegalArgumentException, DatabaseException {
+        if (username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be null or empty");
+        }
+
+        try {
+            return userDao.findByUsername(username);
+        } catch (SQLException e) {
+            throw new DatabaseException("Error retrieving user by username: " + username + ", " + e);
+        }
     }
 
-    @Override
     /**
-     * Retrieves all users from the database.
-     * @return a list of all UserDto objects
+     * {@inheritDoc}
      */
-    public List<UserDto> findAll() throws SQLException {
-        return userDao.findAll();
+    @Override
+    public List<UserResponse> findAll() throws DatabaseException {
+        try {
+            return userDao.findAll();
+        } catch (SQLException e) {
+            throw new DatabaseException("Error retrieiving list of users " + ", " + e);
+        }
     }
 
-    @Override
     /**
-     * Saves a new user or updates an existing user in the database.
-     * @param user the User object to save or update
-     * @return true if the operation was successful, false otherwise
+     * {@inheritDoc}
      */
-    public boolean save(User user) throws SQLException {
-        return userDao.save(user);
+    @Override
+    public boolean save(User user) throws IllegalArgumentException, DatabaseException, UserNotFoundException, UserAlreadyExistsException {
+        // check if user = null
+        if (user == null) {
+            throw new IllegalArgumentException("Must include a Request Body");
+        } 
+
+        try {
+            return userDao.save(user);
+        } catch (SQLException ex) {
+            throw new DatabaseException("Error saving new user info for user with ID " + user.getUserId() + ", " + ex);
+        }
     }
 
-    @Override
     /**
-     * Deletes a user by their unique ID.
-     * @param id the user ID to delete
-     * @return true if the user was deleted successfully, false otherwise
+     * {@inheritDoc}
      */
-    public boolean deleteById(int id) throws SQLException {
-        return userDao.deleteById(id);
+    @Override
+    public boolean deleteById(int id) throws IllegalArgumentException, DatabaseException {
+        // check if id <= 0
+        if (id <= 0) {
+            throw new IllegalArgumentException("User ID must be greater than 0");
+        }
+
+        try {
+            return userDao.deleteById(id);
+        } catch (SQLException e) {
+            throw new DatabaseException("Error deleting user with ID, " + id + ": " + e);
+        }
     }
 
     
