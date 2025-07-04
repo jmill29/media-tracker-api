@@ -5,6 +5,7 @@ import java.util.List;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryRequest;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryResponse;
 import com.jmill29.tvtrackerapi.exception.DatabaseException;
+import com.jmill29.tvtrackerapi.exception.WatchHistoryAlreadyExistsException;
 import com.jmill29.tvtrackerapi.exception.WatchHistoryNotFoundException;
 
 public interface UserWatchHistoryService {
@@ -18,7 +19,7 @@ public interface UserWatchHistoryService {
      * @throws IllegalArgumentException if input is invalid
      * @throws DatabaseException if a database access error occurs
      */
-    boolean addShowToWatchHistory(UserWatchHistoryRequest userWatchHistoryRequest, String username) throws IllegalArgumentException, DatabaseException;
+    boolean addShowToWatchHistory(UserWatchHistoryRequest userWatchHistoryRequest, String username) throws IllegalArgumentException, DatabaseException, WatchHistoryAlreadyExistsException;
 
     /**
      * Retrieves the watch history for a specific user by user ID.

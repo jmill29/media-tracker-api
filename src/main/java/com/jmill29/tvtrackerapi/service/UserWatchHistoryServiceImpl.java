@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.jmill29.tvtrackerapi.dao.UserWatchHistoryDao;
-import com.jmill29.tvtrackerapi.dto.UserWatchHistoryResponse;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryRequest;
+import com.jmill29.tvtrackerapi.dto.UserWatchHistoryResponse;
 import com.jmill29.tvtrackerapi.exception.DatabaseException;
 import com.jmill29.tvtrackerapi.exception.UserNotFoundException;
 import com.jmill29.tvtrackerapi.exception.WatchHistoryAlreadyExistsException;
@@ -35,7 +35,7 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
      * @throws DatabaseException if a database error occurs
      */
     @Override
-    public boolean addShowToWatchHistory(UserWatchHistoryRequest userWatchHistoryRequest, String username) throws IllegalArgumentException, DatabaseException {
+    public boolean addShowToWatchHistory(UserWatchHistoryRequest userWatchHistoryRequest, String username) throws IllegalArgumentException, DatabaseException, WatchHistoryAlreadyExistsException {
         // check if userWatchHistoryRequest is null
         if (userWatchHistoryRequest == null) {
             throw new IllegalArgumentException("Must include a Request Body");
