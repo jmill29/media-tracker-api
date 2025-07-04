@@ -1,0 +1,10 @@
+com.jmill29.tvtrackerapi
+com.jmill29.tvtrackerapi.config
+com.jmill29.tvtrackerapi.controller
+com.jmill29.tvtrackerapi.dao
+com.jmill29.tvtrackerapi.dto
+com.jmill29.tvtrackerapi.enums
+com.jmill29.tvtrackerapi.exception
+com.jmill29.tvtrackerapi.model
+com.jmill29.tvtrackerapi.service
+com.jmill29.tvtrackerapi.utils
