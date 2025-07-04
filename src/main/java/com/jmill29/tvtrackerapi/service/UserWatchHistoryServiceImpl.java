@@ -31,8 +31,6 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
 
     /**
      * {@inheritDoc}
-     * @throws IllegalArgumentException if the request is null, username is invalid, or show already exists in watch history
-     * @throws DatabaseException if a database error occurs
      */
     @Override
     public boolean addShowToWatchHistory(UserWatchHistoryRequest userWatchHistoryRequest, String username) throws IllegalArgumentException, DatabaseException, WatchHistoryAlreadyExistsException {
@@ -60,9 +58,6 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
 
     /**
      * {@inheritDoc}
-     * @throws IllegalArgumentException if userId is invalid or user does not exist
-     * @throws DatabaseException if a database error occurs
-     * @throws WatchHistoryNotFoundException if no watch history is found for the user
      */
     @Override
     public List<UserWatchHistoryResponse> getWatchHistoryByUserId(int userId, boolean getAll) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
@@ -96,9 +91,6 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
 
     /**
      * {@inheritDoc}
-     * @throws IllegalArgumentException if the request is null, username is invalid, or watch history does not exist
-     * @throws DatabaseException if a database error occurs
-     * @throws WatchHistoryNotFoundException if the watch history entry does not exist or update fails
      */
     @Override
     public boolean updateWatchStatus(UserWatchHistoryRequest userWatchHistoryRequest, String username) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
@@ -130,9 +122,6 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
 
     /**
      * {@inheritDoc}
-     * @throws IllegalArgumentException if username or showId is invalid
-     * @throws DatabaseException if a database error occurs
-     * @throws WatchHistoryNotFoundException if the watch history entry does not exist or deletion fails
      */
     @Override
     public boolean deleteShowFromWatchHistory(String username, int showId) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
@@ -157,8 +146,6 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
 
     /**
      * {@inheritDoc}
-     * @throws IllegalArgumentException if username or showId is invalid
-     * @throws DatabaseException if a database error occurs
      */
     @Override
     public boolean isShowInWatchHistory(String username, int showId) throws IllegalArgumentException, DatabaseException {
@@ -177,9 +164,6 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
 
     /**
      * {@inheritDoc}
-     * @throws IllegalArgumentException if username is invalid
-     * @throws DatabaseException if a database error occurs
-     * @throws WatchHistoryNotFoundException if no watch history is found for the user
      */
     @Override
     public List<UserWatchHistoryResponse> getWatchHistoryByUsername(String username, boolean getAll) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
