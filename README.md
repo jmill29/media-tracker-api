@@ -2,9 +2,13 @@
 
 This is the backend API for my Cognixia Future Horizons Capstone Project. It’s a Java-based Spring Boot REST API that allows users to track their TV show watch history. This project demonstrates secure user authentication, layered architecture, and robust exception handling.
 
+---
+
 ## 🎯 Project Objective
 
-To design and build a secure, maintainable, and fully functional backend application for managing a user's personalized TV watch history using Spring Boot and MySQL. This project is intended to showcase my backend development skills, including authentication, data persistence, and RESTful design.
+To design and build a secure, maintainable, and fully functional backend application for managing a user's personalized TV watch history using Spring Boot and MySQL. This project showcases my backend development skills, including authentication, data persistence, and RESTful API design.
+
+---
 
 ## ✅ Key Features
 
@@ -12,9 +16,25 @@ To design and build a secure, maintainable, and fully functional backend applica
 - **BCrypt-encrypted passwords** for secure login
 - **Track watch status** (e.g., Watching, Completed, Plan to Watch) per show
 - **REST API design** using Controller-Service-DAO architecture
-- **Global Exception Handling** using `@ControllerAdvice`
+- **Global Exception Handling** with `@ControllerAdvice`
 - **Modular and Testable Codebase**
 - **SQL seed script** for fast local setup
+- **Swagger/OpenAPI UI** for exploring and testing endpoints
+- **Javadoc HTML Documentation** for developers and maintainers
+
+---
+
+## 📖 API Documentation
+
+- 🔍 **Swagger/OpenAPI Docs (Live UI)**:  
+  Once the application is running, access the interactive API documentation at:  
+  👉 [`http://localhost:8080/swagger-ui/index.html`](http://localhost:8080/swagger-ui/index.html)
+
+- 📚 **Javadoc HTML Documentation**:  
+  Full JavaDoc reference for all classes, available in the `/docs` folder:  
+  👉 [View Javadoc HTML](./docs/index.html)
+
+---
 
 ## 📌 Endpoints Summary
 
@@ -28,14 +48,20 @@ To design and build a secure, maintainable, and fully functional backend applica
 
 > 🔐 All `watch-history` endpoints require Basic Auth using valid user credentials
 
+---
+
 ## 🛠 Technologies Used
 
 - Java 17
 - Spring Boot
 - Spring Security
-- JDBC (no Hibernate)
+- JDBC (manual implementation, no Hibernate)
 - MySQL (local instance)
 - Maven
+- Swagger (Springdoc OpenAPI)
+- Javadoc (HTML output)
+
+---
 
 ## 🚀 How to Run Locally
 
@@ -46,7 +72,7 @@ To design and build a secure, maintainable, and fully functional backend applica
    ```
 
 2. Set up the MySQL database:
-   - Open MySQL Workbench (or other client)
+   - Open MySQL Workbench (or another client)
    - Run `src/main/resources/capstone_schema_seed.sql`
 
 3. Configure `application.properties`:
@@ -60,6 +86,8 @@ To design and build a secure, maintainable, and fully functional backend applica
    ```bash
    mvn spring-boot:run
    ```
+
+---
 
 ## 🧪 Example Usage
 
@@ -77,17 +105,21 @@ With header:
 Authorization: Basic base64encoded(username:password)
 ```
 
+---
+
 ## 💡 Notes for Evaluators
 
-- I used a **layered architecture** with clear separation of concerns
-- Passwords are **securely hashed** using BCrypt
-- DAO layer uses **manual JDBC** (no Spring Data JPA)
-- The app is **production-ready** and modular enough to support future enhancements
-- I plan to build a **console-based frontend** as the next phase
-- The code is **well-documented**, and the SQL script provides test users and data
+- The app follows a **clean layered architecture** with clear separation of concerns.
+- Passwords are securely hashed using **BCrypt**.
+- The DAO layer uses **manual JDBC** for full control and learning purposes.
+- Swagger UI and Javadoc provide **interactive and developer-facing documentation**.
+- I plan to build a **console-based frontend** as the next phase.
+- The app is **modular and production-ready**, with well-documented code and realistic seed data.
+
+---
 
 ## 🙌 Thank You
 
-Thank you to the Cognixia team for the excellent training and support. I welcome any feedback to improve this project and grow as a backend developer.
+Huge thanks to the Cognixia team for the incredible training and support. I'm proud of what I built here and excited to continue growing as a backend developer.
 
 — Jacob Miller
