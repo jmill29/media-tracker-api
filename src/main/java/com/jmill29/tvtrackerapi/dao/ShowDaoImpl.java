@@ -17,16 +17,31 @@ import com.jmill29.tvtrackerapi.exception.ShowAlreadyExistsException;
 import com.jmill29.tvtrackerapi.exception.ShowNotFoundException;
 import com.jmill29.tvtrackerapi.model.Show;
 
+
+/**
+ * JDBC-based implementation of the {@link ShowDao} interface for managing TV show records in the database.
+ * <p>
+ * Provides methods for CRUD operations and searching shows by various criteria using direct JDBC queries.
+ * </p>
+ */
 @Repository
 public class ShowDaoImpl implements ShowDao {
 
     private final DataSource dataSource;
 
+
+    /**
+     * Constructs a new {@code ShowDaoImpl} with the given data source.
+     *
+     * @param dataSource the {@link DataSource} for database connections
+     */
     @Autowired
     public ShowDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
+
+    /** {@inheritDoc} */
     @Override
     public Optional<Show> findById(int id) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
@@ -44,6 +59,8 @@ public class ShowDaoImpl implements ShowDao {
         }
     }
 
+
+    /** {@inheritDoc} */
     @Override
     public List<Show> findAll() throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
@@ -60,6 +77,8 @@ public class ShowDaoImpl implements ShowDao {
         }
     }
 
+
+    /** {@inheritDoc} */
     @Override
     public List<Show> findByName(String name) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
@@ -77,6 +96,8 @@ public class ShowDaoImpl implements ShowDao {
         }
     }
 
+
+    /** {@inheritDoc} */
     @Override
     public List<Show> findByGenre(String genre) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
@@ -94,6 +115,8 @@ public class ShowDaoImpl implements ShowDao {
         }
     }
 
+
+    /** {@inheritDoc} */
     @Override
     public boolean save(Show show) throws SQLException, ShowAlreadyExistsException, ShowNotFoundException {
         if (show.getId() == 0) {
@@ -117,6 +140,8 @@ public class ShowDaoImpl implements ShowDao {
         }
     }
 
+
+    /** {@inheritDoc} */
     @Override
     public boolean deleteById(int id) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
@@ -129,8 +154,16 @@ public class ShowDaoImpl implements ShowDao {
         }
     }
 
+
+    /**
+     * Inserts a new show into the database.
+     *
+     * @param show the {@code Show} object to insert
+     * @param conn an active JDBC connection used for executing the SQL operation
+     * @return {@code true} if the show was inserted successfully, {@code false} otherwise
+     * @throws SQLException if a database access error occurs
+     */
     private boolean create(Show show, Connection conn) throws SQLException {
-        // Insert a new show into the database
         String query = "INSERT INTO tv_shows (show_name, description, image_url, num_episodes, release_year) VALUES (?, ?, ?, ?, ?)";
         PreparedStatement pStmt = conn.prepareStatement(query);
         pStmt.setString(1, show.getName());
@@ -142,8 +175,16 @@ public class ShowDaoImpl implements ShowDao {
         return pStmt.executeUpdate() > 0;
     }
 
+
+    /**
+     * Updates an existing show in the database.
+     *
+     * @param show the {@code Show} object to update
+     * @param conn an active JDBC connection used for executing the SQL operation
+     * @return {@code true} if the show was updated successfully, {@code false} otherwise
+     * @throws SQLException if a database access error occurs
+     */
     private boolean update(Show show, Connection conn) throws SQLException {
-        // Update an existing show in the database
         String query = "UPDATE tv_shows SET show_name = ?, description = ?, image_url = ?, num_episodes = ?, release_year = ? WHERE show_id = ?";
         PreparedStatement pStmt = conn.prepareStatement(query);
         pStmt.setString(1, show.getName());
@@ -156,8 +197,15 @@ public class ShowDaoImpl implements ShowDao {
         return pStmt.executeUpdate() > 0;
     }
 
+
+    /**
+     * Maps a {@link ResultSet} row to a {@link Show} object.
+     *
+     * @param rs the {@link ResultSet} positioned at a row
+     * @return the mapped {@code Show} object
+     * @throws SQLException if a database access error occurs
+     */
     private Show mapShow(ResultSet rs) throws SQLException {
-        // Map a ResultSet row to a Show object
         return new Show(
             rs.getInt("show_id"),
             rs.getString("show_name"),
@@ -169,6 +217,16 @@ public class ShowDaoImpl implements ShowDao {
         );
     }
 
+
+    /**
+     * Checks if a show with the same name (case-insensitive) and release year already exists in the database to prevent
+     * duplicate entries.
+     *
+     * @param show the {@code Show} to check for duplicates
+     * @param conn an active JDBC connection used for executing the SQL operation
+     * @return {@code true} if a duplicate show exists, {@code false} otherwise
+     * @throws SQLException if a database access error occurs
+     */
     private boolean alreadyExists(Show show, Connection conn) throws SQLException {
         // Check for an existing show with the same name (case-insensitive) and release year
         String query = "SELECT 1 FROM tv_shows WHERE LOWER(show_name) = LOWER(?) AND release_year = ?";

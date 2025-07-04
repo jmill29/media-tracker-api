@@ -10,7 +10,11 @@ import com.jmill29.tvtrackerapi.exception.UserNotFoundException;
 import com.jmill29.tvtrackerapi.model.User;
 
 /**
- * Data Access Object interface for managing User data in the database.
+ * Data Access Object interface for managing {@link User} records in the database.
+ * <p>
+ * Provides an abstraction layer for CRUD operations and user lookups. Most read operations return
+ * {@link UserResponse} objects to avoid exposing sensitive fields like passwords.
+ * </p>
  */
 public interface UserDao {
 

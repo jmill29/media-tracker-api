@@ -19,18 +19,33 @@ import com.jmill29.tvtrackerapi.exception.UserAlreadyExistsException;
 import com.jmill29.tvtrackerapi.exception.UserNotFoundException;
 import com.jmill29.tvtrackerapi.model.User;
 
+
+/**
+ * JDBC-based implementation of the {@link UserDao} interface for managing user data in the database.
+ * <p>
+ * Provides methods for CRUD operations and user lookups using direct JDBC queries.
+ * </p>
+ */
 @Repository
 public class UserDaoImpl implements UserDao {
 
     private final DataSource dataSource;
     private final PasswordEncoder encoder;
 
+
+    /**
+     * Constructs a new {@code UserDaoImpl} with the given data source and password encoder.
+     *
+     * @param dataSource the {@link DataSource} for database connections
+     * @param encoder the {@link PasswordEncoder} for encoding user passwords
+     */
     @Autowired
     public UserDaoImpl(DataSource dataSource, PasswordEncoder encoder) {
         this.dataSource = dataSource;
         this.encoder = encoder;
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<UserResponse> findById(int id) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
@@ -46,6 +61,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public Optional<UserResponse> findByUsername(String username) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
@@ -62,6 +78,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public List<UserResponse> findAll() throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
@@ -79,6 +96,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean save(User user) throws SQLException, UserAlreadyExistsException, UserNotFoundException {
         // If userId is 0, treat as a new user (insert)
@@ -105,6 +123,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean deleteById(int id) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
@@ -119,6 +138,15 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+
+    /**
+     * Updates an existing user in the database.
+     *
+     * @param user the {@link User} object to update
+     * @param conn the active database connection
+     * @return {@code true} if the user was updated successfully, {@code false} otherwise
+     * @throws SQLException if a database access error occurs
+     */
     private boolean updateUser(User user, Connection conn) throws SQLException {
         // Only update password if a new one is provided (not null/blank)
         boolean updatingPassword = user.getPassword() != null && !user.getPassword().isBlank();
@@ -151,6 +179,15 @@ public class UserDaoImpl implements UserDao {
         return rowsAffected > 0;
     }
 
+
+    /**
+     * Inserts a new user into the database.
+     *
+     * @param user the {@link User} object to insert
+     * @param conn the active database connection
+     * @return {@code true} if the user was inserted successfully, {@code false} otherwise
+     * @throws SQLException if a database access error occurs
+     */
     private boolean createUser(User user, Connection conn) throws SQLException {
         // Always encode password before storing
         String query = "INSERT INTO users (name, username, password, email) VALUES (?, ?, ?, ?)";
@@ -166,8 +203,16 @@ public class UserDaoImpl implements UserDao {
         return rowsAffected > 0;
     }
 
+
+    /**
+     * Maps a {@link ResultSet} row to a {@link UserResponse} object.
+     *
+     * @param rs the {@link ResultSet} positioned at a row
+     * @return the mapped {@code UserResponse} object
+     * @throws SQLException if a database access error occurs
+     */
     private UserResponse mapUser(ResultSet rs) throws SQLException {
-        // Maps a ResultSet row to a UserDto. Order matches UserDto constructor: userId, name, username, email, createdAt
+        // Maps a ResultSet row to a UserResponse. Order matches UserResponse constructor: userId, name, username, email, createdAt
         return new UserResponse(
             rs.getInt("user_id"),
             rs.getString("name"),

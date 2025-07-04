@@ -34,27 +34,27 @@ public interface ShowDao {
     List<Show> findAll() throws SQLException;
 
     /**
-     * Finds shows by their name (case-insensitive).
+     * Finds shows by their name (case-insensitive, partial match).
      *
      * <p>
-     * This method performs a search that may return multiple results matching the given name,
+     * This method performs a partial match search that may return multiple results containing the given name,
      * using case-insensitive comparison.
      * </p>
      *
-     * @param name the name of the show to search for
-     * @return a {@code List} of {@code Show} objects with matching names
+     * @param name the name or substring of the show to search for
+     * @return a {@code List} of {@code Show} objects with names containing the given substring
      * @throws SQLException if a database access error occurs
      */
     List<Show> findByName(String name) throws SQLException;
 
     /**
-     * Finds shows by their genre.
+     * Finds shows by their genre (exact match).
      *
      * <p>
-     * Returns all shows that belong to the specified genre.
+     * Returns all shows that belong to the specified genre using an exact match search.
      * </p>
      *
-     * @param genre the genre to search for
+     * @param genre the genre to search for (must match exactly)
      * @return a {@code List} of {@code Show} objects in the specified genre
      * @throws SQLException if a database access error occurs
      */
@@ -64,7 +64,7 @@ public interface ShowDao {
      * Saves a {@code Show} to the database.
      *
      * <p>
-     * If the provided {@code show} object has a {@code showId} of 0, it is treated as a new show
+     * If the {@code showId} of the given {@code show} is 0, it is treated as a new show
      * and will be inserted into the database.  
      * If the {@code showId} is non-zero, it is assumed the show already exists and an update
      * operation will be performed instead.
