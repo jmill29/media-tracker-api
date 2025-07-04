@@ -3,37 +3,47 @@ package com.jmill29.tvtrackerapi.model;
 import java.time.LocalDateTime;
 
 /**
- * Model representing a user in the system.
+ * Represents a user within the TV tracker system.
+ * <p>
+ * This model is used to encapsulate user-related data, including personal details,
+ * login credentials, and creation metadata.
+ * </p>
  */
 public class User {
 
-    /** The unique ID of the user */
+    /** The unique identifier of the user */
     private int userId;
-    /** The full name of the user */
+
+    /** The user's full name */
     private String name;
-    /** The username of the user */
+
+    /** The unique username chosen by the user */
     private String username;
-    /** The user's password (should be stored as a hash) */
+
+    /** The user's hashed password */
     private String password;
-    /** The email address of the user */
+
+    /** The user's email address */
     private String email;
-    /** The date and time the user was created in the system */
+
+    /** The timestamp when the user account was created */
     private LocalDateTime createdAt;
 
     /**
-     * Default constructor.
+     * Default no-args constructor.
      */
     public User() {
     }
 
     /**
-     * Constructs a User with all fields.
-     * @param userId the unique ID of the user
-     * @param name the user's full name
-     * @param username the user's username
-     * @param password the user's password (should be hashed)
-     * @param email the user's email address
-     * @param createdAt the date and time the user was created
+     * Constructs a new {@code User} with all fields initialized.
+     *
+     * @param userId    the unique ID of the user
+     * @param name      the user's full name
+     * @param username  the user's username
+     * @param password  the user's hashed password
+     * @param email     the user's email address
+     * @param createdAt the account creation timestamp
      */
     public User(int userId, String name, String username, String password, String email, LocalDateTime createdAt) {
         this.userId = userId;
@@ -93,23 +103,19 @@ public class User {
     }
 
     /**
-     * Returns a string representation of the User object.
+     * Returns a string representation of the User object, excluding the password for security.
      * Useful for logging and debugging purposes.
+     *
      * @return a string representation of the user
      */
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("User{");
-        sb.append("userId=").append(userId);
-        sb.append(", name=").append(name);
-        sb.append(", username=").append(username);
-        sb.append(", password=").append(password);
-        sb.append(", email=").append(email);
-        sb.append(", createdAt=").append(createdAt);
-        sb.append('}');
-        return sb.toString();
+        return "User{" +
+                "userId=" + userId +
+                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", createdAt=" + createdAt +
+                '}';
     }
-
-
 }

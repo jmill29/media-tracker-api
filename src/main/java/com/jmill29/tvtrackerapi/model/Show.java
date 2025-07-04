@@ -3,41 +3,53 @@ package com.jmill29.tvtrackerapi.model;
 import java.time.LocalDateTime;
 
 /**
- * Model representing a TV show in the system.
+ * Represents a TV show within the application.
+ * <p>
+ * This model is used throughout the system to encapsulate show-related data,
+ * including metadata such as title, description, episode count, and creation timestamp.
+ * </p>
  */
 public class Show {
 
-    /** The unique ID of the show */
+    /** The unique identifier for the show */
     private int id;
-    /** The name of the show */
+
+    /** The title of the show */
     private String name;
-    /** The description of the show */
+
+    /** A brief description or synopsis of the show */
     private String description;
-    /** The image URL for the show */
+
+    /** A URL pointing to the show's image or poster */
     private String imageUrl;
-    /** The number of episodes in the show */
+
+    /** The total number of episodes in the show */
     private int numEpisodes;
-    /** The release year of the show */
+
+    /** The year the show was released */
     private short releaseYear;
-    /** The date and time the show was created in the system */
+
+    /** The timestamp when the show record was created in the system */
     private LocalDateTime createdAt;
 
     /**
-     * Default constructor.
+     * Default no-args constructor.
      */
     public Show() {}
 
     /**
-     * Constructs a Show with all fields.
-     * @param id the unique ID of the show
-     * @param name the name of the show
-     * @param description the description of the show
-     * @param imageUrl the image URL for the show
-     * @param numEpisodes the number of episodes
-     * @param releaseYear the release year
-     * @param createdAt the date and time the show was created
+     * Constructs a new {@code Show} with all fields initialized.
+     *
+     * @param id           the unique ID of the show
+     * @param name         the name of the show
+     * @param description  the description of the show
+     * @param imageUrl     the image URL for the show
+     * @param numEpisodes  the number of episodes in the show
+     * @param releaseYear  the year the show was released
+     * @param createdAt    the timestamp when the show was added to the system
      */
-    public Show(int id, String name, String description, String imageUrl, int numEpisodes, short releaseYear, LocalDateTime createdAt) {
+    public Show(int id, String name, String description, String imageUrl,
+                int numEpisodes, short releaseYear, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -104,9 +116,10 @@ public class Show {
     }
 
     /**
-     * Returns a string representation of the Show object.
-     * Useful for logging and debugging purposes.
-     * @return a string representation of the show
+     * Returns a string representation of this show object.
+     * Useful for debugging and logging purposes.
+     *
+     * @return a string summarizing the show's details
      */
     @Override
     public String toString() {
@@ -120,5 +133,4 @@ public class Show {
                 ", createdAt=" + createdAt +
                 '}';
     }
-
 }
