@@ -3,7 +3,7 @@ package com.jmill29.tvtrackerapi.dto;
 /**
  * Represents a standard structure for error responses returned by the API.
  * <p>
- * This DTO is typically used in exception handlers to provide clients with
+ * This class is typically used in exception handlers to provide clients with
  * consistent and descriptive error information.
  * </p>
  */
@@ -32,25 +32,28 @@ public class ErrorResponse {
 
     /**
      * Constructs an {@code ErrorResponse} with the specified details.
+     * The parameter order matches the field declaration order: status, message, timestamp.
      *
-     * @param message   the error message
      * @param status    the HTTP status code
+     * @param message   the error message
      * @param timestamp the time the error occurred (in milliseconds since epoch)
      */
     public ErrorResponse(int status, String message, long timestamp) {
-        this.message = message;
         this.status = status;
+        this.message = message;
         this.timestamp = timestamp;
     }
 
+
     /**
-     * Returns the HTTP status code.
+     * Gets the HTTP status code.
      *
      * @return the status code
      */
     public int getStatus() {
         return status;
     }
+
 
     /**
      * Sets the HTTP status code.
@@ -61,26 +64,29 @@ public class ErrorResponse {
         this.status = status;
     }
 
+
     /**
-     * Returns the error message.
+     * Gets the error message.
      *
-     * @return the message
+     * @return the error message
      */
     public String getMessage() {
         return message;
     }
 
+
     /**
      * Sets the error message.
      *
-     * @param message the message
+     * @param message the error message
      */
     public void setMessage(String message) {
         this.message = message;
     }
 
+
     /**
-     * Returns the timestamp of the error in milliseconds since epoch.
+     * Gets the timestamp of the error in milliseconds since epoch.
      *
      * @return the timestamp
      */
@@ -88,10 +94,11 @@ public class ErrorResponse {
         return timestamp;
     }
 
+
     /**
-     * Sets the timestamp of the error.
+     * Sets the timestamp of the error in milliseconds since epoch.
      *
-     * @param timestamp the timestamp (in milliseconds since epoch)
+     * @param timestamp the timestamp
      */
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;

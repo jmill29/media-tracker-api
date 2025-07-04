@@ -25,7 +25,7 @@ public class UserResponse {
     }
 
     /**
-     * Constructs a UserDto with all fields.
+     * Constructs a {@code UserResponse} with all fields initialized.
      * @param userId the user's unique ID
      * @param name the user's full name
      * @param username the user's username
@@ -123,7 +123,7 @@ public class UserResponse {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("UserDto{");
+        sb.append("UserResponse{");
         sb.append("userId=").append(userId);
         sb.append(", name=").append(name);
         sb.append(", username=").append(username);
