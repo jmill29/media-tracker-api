@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.jmill29.tvtrackerapi.dao.UserDao;
+import com.jmill29.tvtrackerapi.dto.UserRequest;
 import com.jmill29.tvtrackerapi.dto.UserResponse;
 import com.jmill29.tvtrackerapi.exception.DatabaseException;
 import com.jmill29.tvtrackerapi.exception.UserAlreadyExistsException;
@@ -107,6 +108,40 @@ public class UserServiceImpl implements UserService {
             return userDao.deleteById(id);
         } catch (SQLException e) {
             throw new DatabaseException("Error deleting user with ID " + id + ": " + e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Implementation notes:
+     * </p>
+     * <ul>
+     *   <li>Throws {@code IllegalArgumentException} if the input {@code user} is null.</li>
+     *   <li>Creates a new {@link User} entity with the provided registration details. The user ID is set to 0 to indicate a new user.</li>
+     *   <li>Attempts to persist the new user and assign the default role "ROLE_USER".</li>
+     *   <li>If either the save or role assignment fails, returns {@code false}.</li>
+     *   <li>If a {@link SQLException} occurs during either operation, wraps and throws it as a {@link DatabaseException}.</li>
+     *   <li>Side effect: If user creation succeeds but role assignment fails, the user will exist in the database without the intended role.</li>
+     * </ul>
+     * @see UserService#registerUser(UserRequest)
+     */
+    @Override
+    public boolean registerUser(UserRequest user) throws IllegalArgumentException, DatabaseException, UserAlreadyExistsException {
+        // Validate input
+        if (user == null) {
+            throw new IllegalArgumentException("Must include a request body");
+        }
+
+        // Create a new User entity for persistence. ID=0 signals a new user.
+        User newUser = new User(0, user.getName(), user.getUsername(), user.getPassword(), user.getEmail(), null);
+        try {
+            // Save the user and assign the default role. Both must succeed to return true.
+            // Note: If save succeeds but assignRoleToUser fails, the user will exist without the intended role.
+            return userDao.save(newUser) && userDao.assignRoleToUser(user.getUsername(), "ROLE_USER");
+        } catch (SQLException e) {
+            // Wrap SQL exceptions in a custom DatabaseException for service layer consistency.
+            throw new DatabaseException("Error registering user with Username, " + user.getUsername() + ": " + e);
         }
     }
 }

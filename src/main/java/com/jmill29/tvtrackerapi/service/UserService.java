@@ -3,8 +3,10 @@ package com.jmill29.tvtrackerapi.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.jmill29.tvtrackerapi.dto.UserRequest;
 import com.jmill29.tvtrackerapi.dto.UserResponse;
 import com.jmill29.tvtrackerapi.exception.DatabaseException;
+import com.jmill29.tvtrackerapi.exception.UserAlreadyExistsException;
 import com.jmill29.tvtrackerapi.model.User;
 
 /**
@@ -67,4 +69,19 @@ public interface UserService {
      * @throws DatabaseException if a database access error occurs
      */
     boolean deleteById(int id) throws IllegalArgumentException, DatabaseException;
+
+    /**
+     * Registers a new user in the system.
+     * <p>
+     * Validates the provided {@code UserRequest} and attempts to create a new user account.
+     * If a user with the same username already exists, a {@code UserAlreadyExistsException} is thrown.
+     * </p>
+     *
+     * @param user the {@code UserRequest} containing user registration details
+     * @return {@code true} if the user was registered successfully, {@code false} otherwise
+     * @throws IllegalArgumentException if the user request is null or contains invalid fields
+     * @throws DatabaseException if a database access error occurs
+     * @throws UserAlreadyExistsException if a user with the same username already exists
+     */
+    boolean registerUser(UserRequest user) throws IllegalArgumentException, DatabaseException, UserAlreadyExistsException;
 }
