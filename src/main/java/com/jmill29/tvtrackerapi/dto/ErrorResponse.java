@@ -103,4 +103,12 @@ public class ErrorResponse {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+    @Override
+    public String toString() {
+        return "ErrorResponse{" +
+                "status=" + status +
+                ", message='" + message + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }
