@@ -61,12 +61,12 @@ public class UserWatchHistoryDaoImpl implements UserWatchHistoryDao {
             String query;
             if (!getAll) {
                 // Only shows the user has interacted with (INNER JOIN)
-                query = "SELECT uwh.show_id, s.name AS show_name, s.description, s.image_url, uwh.status " +
+                query = "SELECT uwh.show_id, s.show_name AS show_name, s.description, s.image_url, uwh.status " +
                         "FROM user_watch_history uwh " +
                         "JOIN tv_shows s ON uwh.show_id = s.show_id AND uwh.user_id = ?";
             } else {
                 // All shows, with user's status if present (LEFT JOIN)
-                query = "SELECT uwh.show_id, s.name AS show_name, s.description, s.image_url, uwh.status " +
+                query = "SELECT uwh.show_id, s.show_name AS show_name, s.description, s.image_url, uwh.status " +
                         "FROM tv_shows s " +
                         "LEFT JOIN user_watch_history uwh ON s.show_id = uwh.show_id AND uwh.user_id = ? ";
             }
