@@ -1,3 +1,4 @@
+CREATE DATABASE IF NOT EXISTS tv_show_tracker;
 USE tv_show_tracker;
 
 
