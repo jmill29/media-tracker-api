@@ -24,7 +24,8 @@ CREATE TABLE users (
 CREATE TABLE authorities (
     username VARCHAR(100),
     authority VARCHAR(50),
-    FOREIGN KEY (username) REFERENCES users(username)
+    FOREIGN KEY (username) REFERENCES users(username),
+    UNIQUE (username, authority)
 );
 
 -- TV Shows Table
