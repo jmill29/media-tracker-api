@@ -10,12 +10,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.when;
 import org.mockito.MockitoAnnotations;
 
 import com.jmill29.tvtrackerapi.dao.UserDao;
+import com.jmill29.tvtrackerapi.dto.UserRequest;
 import com.jmill29.tvtrackerapi.dto.UserResponse;
 import com.jmill29.tvtrackerapi.exception.DatabaseException;
 import com.jmill29.tvtrackerapi.model.User;
@@ -118,5 +121,40 @@ class UserServiceImplTest {
     void deleteById_throwsDatabaseException() throws Exception {
         when(userDao.deleteById(1)).thenThrow(new java.sql.SQLException("DB error"));
         assertThrows(DatabaseException.class, () -> userService.deleteById(1));
+    }
+
+    @Test
+    @DisplayName("registerUser registers user successfully")
+    void registerUser_registersSuccessfully() throws Exception {
+        var userRequest = new UserRequest("Name", "username", "password", "email@example.com");
+        var user = new User(0, "Name", "username", "password", "email@example.com", null);
+        when(userDao.save(any(User.class))).thenReturn(true);
+        when(userDao.assignRoleToUser(anyString(), anyString())).thenReturn(true);
+        assertTrue(userService.registerUser(userRequest));
+    }
+
+    @Test
+    @DisplayName("registerUser throws IllegalArgumentException if request is null")
+    void registerUser_throwsIfNull() {
+        assertThrows(IllegalArgumentException.class, () -> userService.registerUser(null));
+    }
+
+    @Test
+    @DisplayName("registerUser throws DatabaseException on DB error")
+    void registerUser_throwsDatabaseException() throws Exception {
+        var userRequest = new UserRequest("Name", "username", "password", "email@example.com");
+        var user = new User(0, "Name", "username", "password", "email@example.com", null);
+        when(userDao.save(any(User.class))).thenThrow(new java.sql.SQLException("DB error"));
+        assertThrows(DatabaseException.class, () -> userService.registerUser(userRequest));
+    }
+
+    @Test
+    @DisplayName("registerUser returns false if DAO save or assignRole fails")
+    void registerUser_returnsFalseIfDaoFails() throws Exception {
+        var userRequest = new UserRequest("Name", "username", "password", "email@example.com");
+        var user = new User(0, "Name", "username", "password", "email@example.com", null);
+        when(userDao.save(any(User.class))).thenReturn(true);
+        when(userDao.assignRoleToUser(anyString(), anyString())).thenReturn(false);
+        assertFalse(userService.registerUser(userRequest));
     }
 }
