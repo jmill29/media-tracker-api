@@ -35,6 +35,7 @@ class UserDaoImplIntegrationTest {
     @BeforeEach
     void setUp() throws Exception {
         try (Connection conn = dataSource.getConnection(); Statement stmt = conn.createStatement()) {
+            stmt.execute("DELETE FROM authorities");
             stmt.execute("DELETE FROM users");
             stmt.execute("ALTER TABLE users ALTER COLUMN user_id RESTART WITH 1;");
             stmt.execute("INSERT INTO users (name, username, password, email, enabled) VALUES ('Test User', 'testuser', 'pass', 'test@example.com', TRUE)");
@@ -130,5 +131,29 @@ class UserDaoImplIntegrationTest {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    @Test
+    @DisplayName("assignRoleToUser assigns a role to an existing user")
+    void assignRoleToUser_assignsRole() throws Exception {
+        boolean result = userDao.assignRoleToUser("testuser", "ROLE_USER");
+        assertTrue(result, "Role should be assigned successfully");
+        // Optionally, verify by querying the authorities table if you have a method for it
+    }
+
+    @Test
+    @DisplayName("assignRoleToUser returns false or throws for non-existent user")
+    void assignRoleToUser_nonExistentUser() throws Exception {
+        // Should throw SQLException due to FK constraint
+        assertThrows(java.sql.SQLException.class, () -> userDao.assignRoleToUser("nouser", "ROLE_USER"));
+    }
+
+    @Test
+    @DisplayName("assignRoleToUser throws or fails for duplicate role assignment")
+    void assignRoleToUser_duplicateRole() throws Exception {
+        // Assign once
+        assertTrue(userDao.assignRoleToUser("testuser", "ROLE_USER"));
+        // Assign again - should throw or fail due to duplicate (depending on DB setup)
+        assertThrows(java.sql.SQLException.class, () -> userDao.assignRoleToUser("testuser", "ROLE_USER"));
     }
 }
