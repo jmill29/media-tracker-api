@@ -1,6 +1,6 @@
-# TV Tracker API – Cognixia Capstone Project
+# TV Tracker API – Cognixia Capstone Project ![Coverage](https://img.shields.io/badge/Coverage-80%25-brightgreen)
 
-This is the backend API for my Cognixia Future Horizons Capstone Project. It’s a Java-based Spring Boot REST API that allows users to track their TV show watch history. This project demonstrates secure user authentication, layered architecture, and robust exception handling.
+This is the backend API for my Cognixia Future Horizons Capstone Project. It’s a Java-based Spring Boot REST API that allows users to track their TV show watch history. This project demonstrates secure user authentication, layered architecture, robust exception handling, and thorough testing.
 
 ---
 
@@ -21,6 +21,7 @@ To design and build a secure, maintainable, and fully functional backend applica
 - **SQL seed script** for fast local setup
 - **Swagger/OpenAPI UI** for exploring and testing endpoints
 - **Javadoc HTML Documentation** for developers and maintainers
+- **JaCoCo Test Coverage Report** (80%+ coverage)
 
 ---
 
@@ -33,6 +34,15 @@ To design and build a secure, maintainable, and fully functional backend applica
 - 📚 **Javadoc HTML Documentation**:  
   Full JavaDoc reference for all classes, available in the `/docs` folder:  
   👉 [View Javadoc HTML](./docs/index.html)
+
+---
+
+## 📈 Code Quality & Test Coverage
+
+- ✅ **106+ unit/integration tests**
+- 🧪 **DAO, Service, Controller, Exception, and Utility layers tested**
+- 📊 **Test Coverage**: 80%+ (generated with [JaCoCo](https://www.jacoco.org/jacoco/))
+- 🛡️ Tests ensure reliability, robustness, and production-readiness
 
 ---
 
@@ -60,6 +70,7 @@ To design and build a secure, maintainable, and fully functional backend applica
 - Maven
 - Swagger (Springdoc OpenAPI)
 - Javadoc (HTML output)
+- JaCoCo (Test coverage)
 
 ---
 
@@ -113,6 +124,7 @@ Authorization: Basic base64encoded(username:password)
 - Passwords are securely hashed using **BCrypt**.
 - The DAO layer uses **manual JDBC** for full control and learning purposes.
 - Swagger UI and Javadoc provide **interactive and developer-facing documentation**.
+- JaCoCo report shows strong **test coverage across all layers**.
 - I plan to build a **console-based frontend** as the next phase.
 - The app is **modular and production-ready**, with well-documented code and realistic seed data.
 
