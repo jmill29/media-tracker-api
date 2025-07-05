@@ -81,5 +81,19 @@ public interface UserDao {
      */
     boolean deleteById(int id) throws SQLException;
 
+    /**
+     * Assigns a role to a user in the database.
+     * <p>
+     * This method associates the specified role with the user identified by the given username.
+     * It is typically used to grant permissions or access levels to users after creation.
+     * </p>
+     *
+     * @param username the username of the user to whom the role will be assigned
+     * @param role the role to assign (e.g., "ROLE_USER", "ROLE_ADMIN")
+     * @return {@code true} if the role was successfully assigned, {@code false} otherwise
+     * @throws SQLException if a database access error occurs
+     */
+    boolean assignRoleToUser(String username, String role) throws SQLException;
+
 }
 

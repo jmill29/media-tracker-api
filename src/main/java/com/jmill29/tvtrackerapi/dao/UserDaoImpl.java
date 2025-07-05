@@ -138,6 +138,34 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     * <p>
+     * Implementation notes:
+     * </p>
+     * <ul>
+     *   <li>Inserts a new row into the <code>authorities</code> table to associate the given role with the specified username.</li>
+     *   <li>If the user already has the role, this may result in a duplicate key or constraint violation depending on the schema.</li>
+     *   <li>Returns {@code true} if the role was assigned (row inserted), {@code false} otherwise.</li>
+     *   <li>Throws {@link SQLException} if a database error occurs (e.g., user does not exist, constraint violation).</li>
+     * </ul>
+     * @see UserDao#assignRoleToUser(String, String)
+     */
+    @Override
+    public boolean assignRoleToUser(String username, String role) throws SQLException {
+        // Prepare SQL to insert a new authority for the user
+        String sql = "INSERT INTO authorities (username, authority) VALUES (?, ?)";
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pStmt = conn.prepareStatement(sql)) {
+            // Set the username and role parameters
+            pStmt.setString(1, username);
+            pStmt.setString(2, role);
+            // Execute the insert; returns true if at least one row was inserted
+            return pStmt.executeUpdate() > 0;
+        }
+        // Any SQL exception will propagate to the caller
+    }
+
 
     /**
      * Updates an existing user in the database.
