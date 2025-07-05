@@ -68,4 +68,11 @@ public class UserWatchHistoryRequest {
     public void setStatus(WatchStatus status) {
         this.status = status;
     }
+    @Override
+    public String toString() {
+        return "UserWatchHistoryRequest{" +
+                "showId=" + showId +
+                ", status=" + (status != null ? status.name() : null) +
+                '}';
+    }
 }
