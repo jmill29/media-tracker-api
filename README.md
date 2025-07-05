@@ -39,7 +39,7 @@ To design and build a secure, maintainable, and fully functional backend applica
 
 ## 📈 Code Quality & Test Coverage
 
-- ✅ **106+ unit/integration tests**
+- ✅ **170+ unit/integration tests**
 - 🧪 **DAO, Service, Controller, Exception, and Utility layers tested**
 - 📊 **Test Coverage**: 80%+ (generated with [JaCoCo](https://www.jacoco.org/jacoco/))
 - 🛡️ Tests ensure reliability, robustness, and production-readiness
