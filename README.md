@@ -28,11 +28,9 @@ To design and build a secure, maintainable, and fully functional backend applica
 ## 📖 API Documentation
 
 - 🔍 **Swagger/OpenAPI Docs (Live UI)**:  
-  Once the application is running, access the interactive API documentation at:  
   👉 [`http://localhost:8080/swagger-ui/index.html`](http://localhost:8080/swagger-ui/index.html)
 
 - 📚 **Javadoc HTML Documentation**:  
-  Full JavaDoc reference for all classes, available in the `/docs` folder:  
   👉 [View Javadoc HTML](./docs/index.html)
 
 ---
@@ -62,38 +60,39 @@ To design and build a secure, maintainable, and fully functional backend applica
 
 ## 🛠 Technologies Used
 
-- Java 17
-- Spring Boot
-- Spring Security
-- JDBC (manual implementation, no Hibernate)
-- MySQL (local instance)
-- Maven
-- Swagger (Springdoc OpenAPI)
-- Javadoc (HTML output)
+- Java 17  
+- Spring Boot  
+- Spring Security  
+- JDBC (manual implementation, no Hibernate)  
+- MySQL (local instance)  
+- Maven  
+- Swagger (Springdoc OpenAPI)  
+- Javadoc (HTML output)  
 - JaCoCo (Test coverage)
 
 ---
 
 ## 🚀 How to Run Locally
 
-1. Clone the project:
+1. **Clone the project**:
    ```bash
    git clone https://github.com/jmill29/tv-show-tracker-api.git
    cd tv-show-tracker-api
    ```
 
-2. Set up the MySQL database:
-   - Open MySQL Workbench (or another client)
-   - Run `src/main/resources/capstone_schema_seed.sql`
+2. **Set up the MySQL database**:
+   - Open MySQL Workbench (or another SQL client)
+   - Run the schema seed script:  
+     `src/main/resources/capstone_schema_seed.sql`
 
-3. Configure `application.properties`:
+3. **Configure `application.properties`**:
    ```properties
    spring.datasource.url=jdbc:mysql://localhost:3306/tv_show_tracker
    spring.datasource.username=your_mysql_user
    spring.datasource.password=your_mysql_password
    ```
 
-4. Run the application:
+4. **Run the application**:
    ```bash
    mvn spring-boot:run
    ```
@@ -102,8 +101,9 @@ To design and build a secure, maintainable, and fully functional backend applica
 
 ## 🧪 Example Usage
 
-**POST /api/watch-history**
+### `POST /api/watch-history`
 
+**Request Body:**
 ```json
 {
   "show_id": 3,
@@ -111,22 +111,29 @@ To design and build a secure, maintainable, and fully functional backend applica
 }
 ```
 
-With header:
+**Header:**
 ```
 Authorization: Basic base64encoded(username:password)
 ```
 
 ---
 
+## 📂 Related Links
+
+- 🖥️ **Frontend Console App**: [tv-tracker-frontend](https://github.com/jmill29/tv-tracker-frontend)  
+- 📋 **Kanban Board**: [GitHub Projects Board](https://github.com/users/jmill29/projects/1)
+
+---
+
 ## 💡 Notes for Evaluators
 
-- The app follows a **clean layered architecture** with clear separation of concerns.
-- Passwords are securely hashed using **BCrypt**.
-- The DAO layer uses **manual JDBC** for full control and learning purposes.
-- Swagger UI and Javadoc provide **interactive and developer-facing documentation**.
-- JaCoCo report shows strong **test coverage across all layers**.
-- I plan to build a **console-based frontend** as the next phase.
-- The app is **modular and production-ready**, with well-documented code and realistic seed data.
+- The app follows a clean layered architecture with clear separation of concerns.
+- Passwords are securely hashed using BCrypt.
+- The DAO layer uses manual JDBC for full control and learning purposes.
+- Swagger UI and Javadoc provide interactive and developer-facing documentation.
+- JaCoCo report shows strong test coverage across all layers.
+- A console-based Java frontend is available in the linked repo above.
+- The app is modular and production-ready, with well-documented code and realistic seed data.
 
 ---
 
