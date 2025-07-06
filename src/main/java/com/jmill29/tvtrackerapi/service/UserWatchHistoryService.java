@@ -51,6 +51,9 @@ public interface UserWatchHistoryService {
 
     /**
      * Updates the watch status of a show in the user's watch history.
+     * <p>
+     * Validates the request and username, checks for the existence of the watch history entry, and ensures the show exists in the database.
+     * </p>
      *
      * @param userWatchHistoryRequest the request object containing the updated watch status
      * @param username the username of the user
@@ -58,12 +61,18 @@ public interface UserWatchHistoryService {
      * @throws IllegalArgumentException if input is invalid
      * @throws DatabaseException if a database access error occurs
      * @throws WatchHistoryNotFoundException if the watch history entry does not exist
+     * @throws com.jmill29.tvtrackerapi.exception.ShowNotFoundException if the show ID does not match any entry in the database
+     *
+     * <b>Implementation Note:</b> This method now throws {@link com.jmill29.tvtrackerapi.exception.ShowNotFoundException} if the provided show ID does not exist in the database.
      */
     boolean updateWatchStatus(UserWatchHistoryRequest userWatchHistoryRequest, String username)
-            throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException;
+            throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException, com.jmill29.tvtrackerapi.exception.ShowNotFoundException;
 
     /**
      * Deletes a show from the user's watch history.
+     * <p>
+     * Validates the username and show ID, checks for the existence of the show in the database, and attempts to delete the watch history entry.
+     * </p>
      *
      * @param username the username of the user
      * @param showId the ID of the show to delete
@@ -71,9 +80,12 @@ public interface UserWatchHistoryService {
      * @throws IllegalArgumentException if input is invalid
      * @throws DatabaseException if a database access error occurs
      * @throws WatchHistoryNotFoundException if the watch history entry does not exist
+     * @throws com.jmill29.tvtrackerapi.exception.ShowNotFoundException if the show ID does not match any entry in the database
+     *
+     * <b>Implementation Note:</b> This method now throws {@link com.jmill29.tvtrackerapi.exception.ShowNotFoundException} if the provided show ID does not exist in the database.
      */
     boolean deleteShowFromWatchHistory(String username, int showId)
-            throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException;
+            throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException, com.jmill29.tvtrackerapi.exception.ShowNotFoundException;
 
     /**
      * Checks whether a show is already in the user's watch history.

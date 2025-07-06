@@ -116,6 +116,10 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
             );
         } 
 
+        if (showService.findById(userWatchHistoryRequest.getShowId()).isEmpty()) {
+            throw new ShowNotFoundException("Show with ID, " + userWatchHistoryRequest.getShowId() + ", not found");
+        }
+
         try {
             if (userWatchHistoryDao.updateWatchStatus(userWatchHistoryRequest, username)) {
                 return true;
@@ -138,6 +142,10 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
 
         if (showId <= 0) {
             throw new IllegalArgumentException("Show ID must be greater than 0");
+        }
+
+        if (showService.findById(showId).isEmpty()) {
+            throw new ShowNotFoundException("Show with ID, " + showId + ", not found");
         }
         
         try {
