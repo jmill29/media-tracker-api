@@ -99,6 +99,7 @@ class UserWatchHistoryServiceImplTest {
         req.setShowId(1);
         when(userService.findByUsername("testuser")).thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.dto.UserResponse.class)));
         when(userWatchHistoryDao.isShowInWatchHistory("testuser", 1)).thenReturn(true);
+        when(showService.findById(1)).thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.model.Show.class)));
         when(userWatchHistoryDao.updateWatchStatus(req, "testuser")).thenReturn(true);
         assertTrue(service.updateWatchStatus(req, "testuser"));
     }
@@ -109,6 +110,7 @@ class UserWatchHistoryServiceImplTest {
         UserWatchHistoryRequest req = new UserWatchHistoryRequest();
         when(userService.findByUsername("testuser")).thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.dto.UserResponse.class)));
         when(userWatchHistoryDao.isShowInWatchHistory("testuser", 1)).thenReturn(false);
+        when(showService.findById(1)).thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.model.Show.class)));
         req.setShowId(1);
         WatchHistoryNotFoundException ex3 = assertThrows(WatchHistoryNotFoundException.class, () -> service.updateWatchStatus(req, "testuser"));
         assertNotNull(ex3);
@@ -122,10 +124,22 @@ class UserWatchHistoryServiceImplTest {
     }
 
     @Test
+    @DisplayName("updateWatchStatus throws ShowNotFoundException if show does not exist")
+    void updateWatchStatus_throwsIfShowNotFound() throws Exception {
+        UserWatchHistoryRequest req = new UserWatchHistoryRequest();
+        req.setShowId(999);
+        when(userService.findByUsername("testuser")).thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.dto.UserResponse.class)));
+        when(userWatchHistoryDao.isShowInWatchHistory("testuser", 999)).thenReturn(true);
+        when(showService.findById(999)).thenReturn(java.util.Optional.empty());
+        assertThrows(ShowNotFoundException.class, () -> service.updateWatchStatus(req, "testuser"));
+    }
+
+    @Test
     @DisplayName("deleteShowFromWatchHistory deletes successfully")
     void deleteShowFromWatchHistory_deletesSuccessfully() throws Exception {
         when(userService.findByUsername("testuser")).thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.dto.UserResponse.class)));
         when(userWatchHistoryDao.isShowInWatchHistory("testuser", 1)).thenReturn(true);
+        when(showService.findById(1)).thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.model.Show.class)));
         when(userWatchHistoryDao.deleteShowFromWatchHistory("testuser", 1)).thenReturn(true);
         assertTrue(service.deleteShowFromWatchHistory("testuser", 1));
     }
@@ -135,8 +149,17 @@ class UserWatchHistoryServiceImplTest {
     void deleteShowFromWatchHistory_throwsIfNotFound() throws Exception {
         when(userService.findByUsername("testuser")).thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.dto.UserResponse.class)));
         when(userWatchHistoryDao.isShowInWatchHistory("testuser", 1)).thenReturn(false);
+        when(showService.findById(1)).thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.model.Show.class)));
         WatchHistoryNotFoundException ex5 = assertThrows(WatchHistoryNotFoundException.class, () -> service.deleteShowFromWatchHistory("testuser", 1));
         assertNotNull(ex5);
+    }
+
+    @Test
+    @DisplayName("deleteShowFromWatchHistory throws ShowNotFoundException if show does not exist")
+    void deleteShowFromWatchHistory_throwsIfShowNotFound() throws Exception {
+        when(userService.findByUsername("testuser")).thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.dto.UserResponse.class)));
+        when(showService.findById(999)).thenReturn(java.util.Optional.empty());
+        assertThrows(ShowNotFoundException.class, () -> service.deleteShowFromWatchHistory("testuser", 999));
     }
 
     @Test
