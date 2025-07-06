@@ -119,4 +119,20 @@ public class GlobalExceptionHandler {
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    /**
+     * Handles {@link ShowNotFoundException} and returns a 404 NOT_FOUND response.
+     *
+     * @param ex the exception thrown when a show is not found in the database
+     * @return a standardized {@link ErrorResponse} with HTTP 404 status
+     */
+    @ExceptionHandler(ShowNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleException(ShowNotFoundException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(
+            HttpStatus.NOT_FOUND.value(),
+            ex.getMessage(),
+            System.currentTimeMillis()
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
 }
