@@ -31,6 +31,9 @@ public class GlobalExceptionHandler {
 
     /**
      * Handles {@link UserAlreadyExistsException} and returns a 409 CONFLICT response.
+     *
+     * @param ex the exception thrown when a user already exists
+     * @return a standardized {@link ErrorResponse} with HTTP 409 status
      */
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleException(UserAlreadyExistsException ex) {
@@ -44,6 +47,9 @@ public class GlobalExceptionHandler {
 
     /**
      * Handles {@link DatabaseException} and returns a 500 INTERNAL_SERVER_ERROR response.
+     *
+     * @param ex the exception thrown when a database error occurs
+     * @return a standardized {@link ErrorResponse} with HTTP 500 status
      */
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<ErrorResponse> handleException(DatabaseException ex) {
@@ -57,6 +63,9 @@ public class GlobalExceptionHandler {
 
     /**
      * Handles {@link NoShowsFoundException} and returns a 404 NOT_FOUND response.
+     *
+     * @param ex the exception thrown when no shows are found in the database
+     * @return a standardized {@link ErrorResponse} with HTTP 404 status
      */
     @ExceptionHandler(NoShowsFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(NoShowsFoundException ex) {
@@ -70,6 +79,9 @@ public class GlobalExceptionHandler {
 
     /**
      * Handles {@link UserNotFoundException} and returns a 404 NOT_FOUND response.
+     *
+     * @param ex the exception thrown when a user is not found
+     * @return a standardized {@link ErrorResponse} with HTTP 404 status
      */
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(UserNotFoundException ex) {
@@ -83,6 +95,9 @@ public class GlobalExceptionHandler {
 
     /**
      * Handles {@link WatchHistoryNotFoundException} and returns a 404 NOT_FOUND response.
+     *
+     * @param ex the exception thrown when a user's watch history entry is not found
+     * @return a standardized {@link ErrorResponse} with HTTP 404 status
      */
     @ExceptionHandler(WatchHistoryNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(WatchHistoryNotFoundException ex) {
@@ -96,6 +111,9 @@ public class GlobalExceptionHandler {
 
     /**
      * Handles {@link WatchHistoryAlreadyExistsException} and returns a 409 CONFLICT response.
+     *
+     * @param ex the exception thrown when a watch history entry already exists
+     * @return a standardized {@link ErrorResponse} with HTTP 409 status
      */
     @ExceptionHandler(WatchHistoryAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleException(WatchHistoryAlreadyExistsException ex) {
@@ -109,6 +127,9 @@ public class GlobalExceptionHandler {
 
     /**
      * Handles {@link IllegalArgumentException} and returns a 400 BAD_REQUEST response.
+     *
+     * @param ex the exception thrown when a method receives invalid input
+     * @return a standardized {@link ErrorResponse} with HTTP 400 status
      */
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<ErrorResponse> handleException(IllegalArgumentException ex) {

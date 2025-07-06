@@ -29,9 +29,9 @@ public interface UserWatchHistoryService {
      * @throws IllegalArgumentException if the request is null or username is invalid
      * @throws DatabaseException if a database error occurs
      * @throws WatchHistoryAlreadyExistsException if the show is already in the user's watch history
-     * @throws ShowNotFoundException if the show ID does not match any entry in the database
+     * @throws com.jmill29.tvtrackerapi.exception.ShowNotFoundException if the show ID does not match any entry in the database
      *
-     * <b>Implementation Note:</b> This method now throws {@link ShowNotFoundException} if the provided show ID does not exist in the database.
+     * <b>Implementation Note:</b> This method now throws {@link com.jmill29.tvtrackerapi.exception.ShowNotFoundException} if the provided show ID does not exist in the database.
      */
     boolean addShowToWatchHistory(UserWatchHistoryRequest userWatchHistoryRequest, String username)
             throws IllegalArgumentException, DatabaseException, WatchHistoryAlreadyExistsException, com.jmill29.tvtrackerapi.exception.ShowNotFoundException;
