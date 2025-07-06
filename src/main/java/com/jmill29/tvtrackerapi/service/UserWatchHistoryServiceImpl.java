@@ -154,7 +154,7 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
                 return true;
             } else {
                 throw new WatchHistoryNotFoundException(
-                        "Failed to delete show ID " + showId + " from watch history for user " + username
+                        "Item with ID, " + showId + ", not found in user's watch history"
                 );
             }
         } catch (SQLException ex) {
