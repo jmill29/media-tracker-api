@@ -20,6 +20,7 @@ import org.mockito.MockitoAnnotations;
 import com.jmill29.tvtrackerapi.dao.UserWatchHistoryDao;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryRequest;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryResponse;
+import com.jmill29.tvtrackerapi.exception.ShowNotFoundException;
 import com.jmill29.tvtrackerapi.exception.UserNotFoundException;
 import com.jmill29.tvtrackerapi.exception.WatchHistoryAlreadyExistsException;
 import com.jmill29.tvtrackerapi.exception.WatchHistoryNotFoundException;
@@ -30,6 +31,8 @@ class UserWatchHistoryServiceImplTest {
     private UserWatchHistoryDao userWatchHistoryDao;
     @Mock
     private UserService userService;
+    @Mock
+    private ShowService showService;
     @InjectMocks
     private UserWatchHistoryServiceImpl service;
 
@@ -45,6 +48,7 @@ class UserWatchHistoryServiceImplTest {
         req.setShowId(1);
         when(userService.findByUsername("testuser")).thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.dto.UserResponse.class)));
         when(userWatchHistoryDao.isShowInWatchHistory("testuser", 1)).thenReturn(false);
+        when(showService.findById(1)).thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.model.Show.class)));
         when(userWatchHistoryDao.addShowToWatchHistory(req, "testuser")).thenReturn(true);
         assertTrue(service.addShowToWatchHistory(req, "testuser"));
     }
@@ -65,6 +69,27 @@ class UserWatchHistoryServiceImplTest {
     void addShowToWatchHistory_throwsIfNull() {
         IllegalArgumentException ex2 = assertThrows(IllegalArgumentException.class, () -> service.addShowToWatchHistory(null, "testuser"));
         assertNotNull(ex2);
+    }
+
+    @Test
+    @DisplayName("addShowToWatchHistory throws if show not found")
+    void addShowToWatchHistory_throwsIfShowNotFound() throws Exception {
+        // Arrange
+        UserWatchHistoryRequest req = new UserWatchHistoryRequest();
+        req.setShowId(999);
+
+        // Simulate that the user exists
+        when(userService.findByUsername("testuser"))
+            .thenReturn(java.util.Optional.of(mock(com.jmill29.tvtrackerapi.dto.UserResponse.class)));
+
+        // Simulate that the show is not already in watch history
+        when(userWatchHistoryDao.isShowInWatchHistory("testuser", 999)).thenReturn(false);
+
+        // Simulate that the show does not exist in the system
+        when(showService.findById(999)).thenReturn(java.util.Optional.empty());
+
+        // Act + Assert
+        assertThrows(ShowNotFoundException.class, () -> service.addShowToWatchHistory(req, "testuser"));
     }
 
     @Test
