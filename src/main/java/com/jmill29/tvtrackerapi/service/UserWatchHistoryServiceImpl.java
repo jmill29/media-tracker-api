@@ -108,17 +108,17 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
         }
 
         validateUsername(username);
-        
-        // check if watch history exists for the user and show
-        if (!this.isShowInWatchHistory(username, userWatchHistoryRequest.getShowId())) {
-            throw new WatchHistoryNotFoundException(
-                    "Watch history for show ID " + userWatchHistoryRequest.getShowId() + " for user " + username + " does not exist"
-            );
-        } 
 
         if (showService.findById(userWatchHistoryRequest.getShowId()).isEmpty()) {
             throw new ShowNotFoundException("Show with ID, " + userWatchHistoryRequest.getShowId() + ", not found");
         }
+        
+        // check if watch history exists for the user and show
+        if (!this.isShowInWatchHistory(username, userWatchHistoryRequest.getShowId())) {
+            throw new WatchHistoryNotFoundException(
+                    "Watch history for item with ID " + userWatchHistoryRequest.getShowId() + " for user " + username + " does not exist"
+            );
+        } 
 
         try {
             if (userWatchHistoryDao.updateWatchStatus(userWatchHistoryRequest, username)) {
@@ -137,7 +137,8 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
      * {@inheritDoc}
      */
     @Override
-    public boolean deleteShowFromWatchHistory(String username, int showId) throws IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException {
+    public boolean deleteShowFromWatchHistory(String username, int showId) throws 
+        IllegalArgumentException, DatabaseException, WatchHistoryNotFoundException, ShowNotFoundException {
         validateUsername(username);
 
         if (showId <= 0) {
