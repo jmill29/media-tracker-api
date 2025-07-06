@@ -9,6 +9,7 @@ import com.jmill29.tvtrackerapi.dao.UserWatchHistoryDao;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryRequest;
 import com.jmill29.tvtrackerapi.dto.UserWatchHistoryResponse;
 import com.jmill29.tvtrackerapi.exception.DatabaseException;
+import com.jmill29.tvtrackerapi.exception.ShowNotFoundException;
 import com.jmill29.tvtrackerapi.exception.UserNotFoundException;
 import com.jmill29.tvtrackerapi.exception.WatchHistoryAlreadyExistsException;
 import com.jmill29.tvtrackerapi.exception.WatchHistoryNotFoundException;
@@ -23,17 +24,21 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
 
     private final UserWatchHistoryDao userWatchHistoryDao;
     private final UserService userService;
+    private final ShowService showService;
 
-    public UserWatchHistoryServiceImpl(UserWatchHistoryDao userWatchHistoryDao, UserService userService) {
+    public UserWatchHistoryServiceImpl(
+        UserWatchHistoryDao userWatchHistoryDao,
+        UserService userService,
+        ShowService showService) {
         this.userWatchHistoryDao = userWatchHistoryDao;
         this.userService = userService;
+        this.showService = showService;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
-    public boolean addShowToWatchHistory(UserWatchHistoryRequest userWatchHistoryRequest, String username) throws IllegalArgumentException, DatabaseException, WatchHistoryAlreadyExistsException {
+    public boolean addShowToWatchHistory(UserWatchHistoryRequest userWatchHistoryRequest, String username)
+        throws IllegalArgumentException, DatabaseException, WatchHistoryAlreadyExistsException, ShowNotFoundException {
         // check if userWatchHistoryRequest is null
         if (userWatchHistoryRequest == null) {
             throw new IllegalArgumentException("Must include a Request Body");
@@ -46,6 +51,10 @@ public class UserWatchHistoryServiceImpl implements UserWatchHistoryService {
             throw new WatchHistoryAlreadyExistsException(
                 "Show ID " + userWatchHistoryRequest.getShowId() + " is already in watch history for user " + username
             );
+        }
+
+        if (showService.findById(userWatchHistoryRequest.getShowId()).isEmpty()) {
+            throw new ShowNotFoundException("Show with ID, " + userWatchHistoryRequest.getShowId() + ", not found");
         }
 
         try {
