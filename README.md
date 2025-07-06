@@ -25,6 +25,12 @@ To design and build a secure, maintainable, and fully functional backend applica
 
 ---
 
+## 🗂️ Entity Relationship Diagram (ERD)
+
+![ER Diagram Placeholder](./ERDiagram.png)
+
+---
+
 ## 📖 API Documentation
 
 - 🔍 **Swagger/OpenAPI Docs (Live UI)**:  
