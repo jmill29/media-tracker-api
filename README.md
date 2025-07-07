@@ -1,120 +1,107 @@
-# Media Tracker API ![Coverage](https://img.shields.io/badge/Coverage-80%25-brightgreen)
+# Media Tracker API – In Progress 🚧 [![Coverage](https://img.shields.io/badge/Coverage-80%25-brightgreen)](https://github.com/jmill29/media-tracker-api) [![WIP](https://img.shields.io/badge/status-in_progress-yellow.svg)](https://github.com/jmill29/media-tracker-frontend)
 
-This is the backend REST API for **Media Tracker**, a full-stack project designed to help users track their consumption of TV shows, books, and music. Built with Java and Spring Boot, this API features secure authentication, modular architecture, custom exception handling, and comprehensive test coverage.
+This is the backend REST API for **Media Tracker**, a full-stack project that helps users track their media consumption across **TV shows**, **books**, and **music**. It’s built with Java and Spring Boot using JDBC for database access.
 
-> 📌 This repo is an extended evolution of my Cognixia Capstone project, originally built to track TV watch history. The scope is now expanding to support multiple media types and deeper tracking functionality.
+> ⚠️ **This project is actively being developed.** What started as a TV-only tracker for my Cognixia Capstone is now evolving into a complete multi-media tracking system.
 
 ---
 
 ## 🎯 Project Objective
 
-To build a scalable, secure, and maintainable backend service that allows users to track, update, and analyze their media consumption history — including TV shows, books, and music — with robust data persistence, RESTful APIs, and clean architectural patterns.
+To create a secure, scalable backend that enables users to track and manage their watch, read, and listen histories across various media formats — while maintaining a clean, modular architecture and high test coverage.
 
 ---
 
-## ✅ Key Features
+## ✅ Current Features (TV Module)
 
-- **User Authentication** via Spring Security and `JdbcUserDetailsManager`
-- **BCrypt-encrypted passwords** for secure login
-- **Track media consumption** across TV shows, books, and music
-- **Flexible architecture** ready for multi-media support
-- **Layered REST API design** (Controller → Service → DAO)
-- **Custom Exception Handling** with `@ControllerAdvice`
-- **Modular and Testable Codebase**
-- **SQL seed script** for local setup
-- **Swagger/OpenAPI** documentation
-- **Javadoc HTML Documentation** for maintainability
-- **JaCoCo Test Coverage Report** (80%+)
+- 🔐 **Basic Auth Authentication** using Spring Security and `JdbcUserDetailsManager`
+- 🔒 **BCrypt Password Hashing**
+- 📺 **TV Show Watch History Tracking** (Watch, Complete, Plan to Watch)
+- 📂 **Clean Architecture**: Controller → Service → DAO
+- ❌ **Custom Exception Handling** with `@ControllerAdvice`
+- 🧪 **Thorough Testing** with 80%+ coverage via JaCoCo
+- 🔧 **SQL Seed Script** for easy local setup
+- 📖 **Interactive API Docs** via Swagger UI
+- 📝 **Javadoc HTML Output**
 
 ---
 
 ## 🗂️ Entity Relationship Diagram (ERD)
 
-![ER Diagram Placeholder](./ERDiagram.png)
+![ER Diagram](./ERDiagram.png)
 
 ---
 
 ## 📖 API Documentation
 
-- 🔍 **Swagger/OpenAPI UI**  
-  View live docs when the app is running:  
+- 🔍 Swagger UI:  
   [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
-- 📚 **Javadoc HTML Docs**  
-  Located in the `/docs` folder:  
-  `./docs/index.html`
+- 📚 Javadoc HTML Docs:  
+  [./docs/index.html](./docs/index.html)
 
 ---
 
-## 📈 Test Coverage
+## 📈 Test Coverage Highlights
 
-- ✅ **170+ unit/integration tests**
-- 🧪 Layers tested: DAO, Service, Controller, Exception Handling
-- 📊 Code coverage: 80%+ (JaCoCo)
-- 🛡️ Tests ensure application reliability and maintainability
-
----
-
-## 📌 Core Endpoints (Current TV Module)
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET    | `/api/shows`            | Fetch all TV shows |
-| GET    | `/api/watch-history`    | Fetch user's tracked shows |
-| POST   | `/api/watch-history`    | Add show to watch history |
-| PUT    | `/api/watch-history`    | Update watch status |
-| DELETE | `/api/watch-history/{showId}` | Remove from watch history |
-
-> 🔐 All `/watch-history` endpoints require Basic Auth
+- ✅ 170+ unit/integration tests
+- 🧪 Tested layers: DAO, Service, Controller, and Exception handling
+- 📊 80%+ line coverage with JaCoCo
 
 ---
 
-## 🛠 Technologies Used
+## 📌 Core Endpoints (Current)
+
+| Method | Endpoint                        | Description                       |
+|--------|----------------------------------|-----------------------------------|
+| GET    | `/api/shows`                    | Get all TV shows                  |
+| GET    | `/api/watch-history`           | View user's watch history         |
+| POST   | `/api/watch-history`           | Add a show to watch history       |
+| PUT    | `/api/watch-history`           | Update status of tracked show     |
+| DELETE | `/api/watch-history/{showId}`  | Remove show from watch history    |
+
+> 🔐 All watch-history routes require valid Basic Auth credentials.
+
+---
+
+## 🛠 Tech Stack
 
 - Java 17  
 - Spring Boot  
 - Spring Security  
-- JDBC (manual, no Hibernate)  
+- JDBC (manual)  
 - MySQL  
-- Maven  
-- Swagger (Springdoc OpenAPI)  
+- Swagger / Springdoc OpenAPI  
+- Javadoc  
 - JaCoCo  
-- Javadoc
+- Maven
 
 ---
 
-## 🚀 How to Run Locally
+## 🚀 Local Setup Instructions
 
-1. **Clone the project**
-   ```
-   git clone https://github.com/jmill29/media-tracker-api.git
-   cd media-tracker-api
-   ```
+1. Clone the repo  
+   `git clone https://github.com/jmill29/media-tracker-api.git`
 
-2. **Set up the MySQL database**
-   - Open MySQL Workbench or CLI
-   - Run the schema seed script:  
-     `src/main/resources/media_tracker_schema_seed.sql`
+2. Set up the MySQL database  
+   Run the SQL file at `src/main/resources/media_tracker_schema_seed.sql`
 
-3. **Configure `application.properties`**
-   ```
+3. Configure your `application.properties`
+   ```properties
    spring.datasource.url=jdbc:mysql://localhost:3306/media_tracker
-   spring.datasource.username=your_mysql_user
-   spring.datasource.password=your_mysql_password
+   spring.datasource.username=your_username
+   spring.datasource.password=your_password
    ```
 
-4. **Run the application**
-   ```
-   mvn spring-boot:run
-   ```
+4. Start the app  
+   `mvn spring-boot:run`
 
 ---
 
-## 🧪 Sample Request
+## 🧪 Example Request
 
 **POST /api/watch-history**
 
-Request Body:
 ```json
 {
   "show_id": 3,
@@ -122,36 +109,34 @@ Request Body:
 }
 ```
 
-Header:
-```
-Authorization: Basic base64encoded(username:password)
-```
+**Header**:  
+`Authorization: Basic base64(username:password)`
 
 ---
 
-## 🛤️ Project Roadmap
+## 🔮 Roadmap – What’s Coming
 
-Planned enhancements for future versions include:
-
-- 🔐 Switch from Basic Auth to JWT-based Authentication (Access + Refresh Tokens)
-- ☁️ Deploy backend to AWS using ECS or Fargate
-- 🌐 Create a modern React frontend (deployed via S3 + CloudFront)
-- 📚 Extend tracking to **books** and **music**
-- 🕓 Implement full **media activity logging** (timestamped watch/read/listen changes)
-- 📊 Add analytics endpoints and personalized summaries
+- ✅ Build out TV show tracking module *(complete)*
+- 🛠️ Replace Basic Auth with JWT (Access + Refresh tokens)
+- 🌐 Create a **React-based frontend** and deploy to S3 + CloudFront
+- ☁️ Deploy backend to AWS (ECS or Fargate)
+- 📚 Add support for **Books**
+- 🎵 Add support for **Music**
+- 🕓 Track full **media activity history** (status updates over time)
+- 📊 Add analytics + personalized summaries
 
 ---
 
 ## 📂 Related Links
 
-- 🔗 [Original Capstone Backend Repo](https://github.com/jmill29/tv-show-tracker-api)
-- 🔗 [Original Capstone Frontend (CLI App)](https://github.com/jmill29/tv-tracker-frontend)
+- 🖥️ [Frontend Repo (Media Tracker UI)](https://github.com/jmill29/media-tracker-frontend)
 - 📋 [Media Tracker Kanban Board](https://github.com/users/jmill29/projects/1)
+- 🧱 [Original Capstone API Repo](https://github.com/jmill29/tv-show-tracker-api)
 
 ---
 
-## 🙌 Credits
+## 🙌 Shoutout
 
-This project builds upon the foundational work completed for my Cognixia Future Horizons Capstone. Huge thanks to the Cognixia team for their training and guidance.
+Special thanks to the Cognixia team for kickstarting this journey. What began as a simple backend app is now growing into a full-stack product that I’m excited to build, refine, and eventually deploy to production.
 
 — Jacob Miller
